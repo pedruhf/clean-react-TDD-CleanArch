@@ -9,11 +9,25 @@ class HttpPostClientStub implements HttpPostClient {
   }
 }
 
+type SutTypes = {
+  sut: RemoteAuthentication;
+  httpPostClientStub: HttpPostClient;
+};
+
+const makeSut = (url: string = "any_url"): SutTypes => {
+  const httpPostClientStub = new HttpPostClientStub(); 
+  const sut = new RemoteAuthentication(url, httpPostClientStub);
+
+  return {
+    sut,
+    httpPostClientStub,
+  };
+};
+
 describe('RemoteAuthentication Usecase', () => {
   test('should call httpClient with correct URL', async () => {
-    const httpPostClientStub = new HttpPostClientStub(); 
     const url = "any_url";
-    const sut = new RemoteAuthentication(url, httpPostClientStub);
+    const { sut, httpPostClientStub } = makeSut();
     await sut.auth();
     expect(httpPostClientStub.url).toBe(url)
   });
