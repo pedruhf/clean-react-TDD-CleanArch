@@ -8,6 +8,7 @@
     ],
     "esModuleInterop": true,
     "module": "ESNEXT",
+    "moduleResolution": "node",
     "jsx": "react",
     "rootDir": "src",
     "baseUrl": "src",
@@ -17,7 +18,6 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "noEmit": true
   },
   "include": [
