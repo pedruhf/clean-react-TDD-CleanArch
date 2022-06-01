@@ -1,3 +1,4 @@
+import { AccountModel } from "@/domain/models/account-model";
 import { AuthenticationParams } from "@/domain/usecases/authentication";
 import { InvalidCredentialsError } from "@/domain/errors/invalid-credentials-error";
 import { UnexpectedError } from "@/domain/errors/unexpected-error";
@@ -11,14 +12,14 @@ const mockAuthentication = (): AuthenticationParams => ({
   password: faker.internet.password(),
 });
 
-class HttpPostClientStub implements HttpPostClient {
+class HttpPostClientStub<T, R> implements HttpPostClient<T,  R> {
   public url?: string;
-  body?: object;
-  response: HttpResponse = {
+  public body?: T;
+  response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
   };
 
-  async post(params: httpPostParams): Promise<HttpResponse> {
+  async post(params: httpPostParams<T>): Promise<HttpResponse<R>> {
     this.url = params.url;
     this.body = params.body;
     return Promise.resolve(this.response);
@@ -27,11 +28,11 @@ class HttpPostClientStub implements HttpPostClient {
 
 type SutTypes = {
   sut: RemoteAuthentication;
-  httpPostClientStub: HttpPostClient;
+  httpPostClientStub: HttpPostClient<AuthenticationParams, AccountModel>;
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientStub = new HttpPostClientStub(); 
+  const httpPostClientStub = new HttpPostClientStub<AuthenticationParams, AccountModel>(); 
   const sut = new RemoteAuthentication(url, httpPostClientStub);
 
   return {
@@ -83,6 +84,15 @@ describe('RemoteAuthentication Usecase', () => {
   });
 
   test('should throw UnexpectedError if HttpPostClient returns 500', async () => {
+    const { sut, httpPostClientStub } = makeSut();
+    httpPostClientStub.response = {
+      statusCode: HttpStatusCode.serverError,
+    };
+    const promise = sut.auth(mockAuthentication());
+    expect(promise).rejects.toThrow(new UnexpectedError())
+  });
+
+  test('should returns 200', async () => {
     const { sut, httpPostClientStub } = makeSut();
     httpPostClientStub.response = {
       statusCode: HttpStatusCode.serverError,
