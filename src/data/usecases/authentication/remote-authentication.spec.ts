@@ -7,6 +7,10 @@ import { HttpPostClient, httpPostParams } from "@/data/protocols/http/http-post-
 import { RemoteAuthentication } from "./remote-authentication";
 import { faker } from "@faker-js/faker";
 
+const mockAccount = (): AccountModel => ({
+  accessToken: faker.datatype.uuid(),
+});
+
 const mockAuthentication = (): AuthenticationParams => ({
   email: faker.internet.email(),
   password: faker.internet.password(),
@@ -92,12 +96,14 @@ describe('RemoteAuthentication Usecase', () => {
     expect(promise).rejects.toThrow(new UnexpectedError())
   });
 
-  test('should returns 200', async () => {
+  test('should return an AccountModel if HttpPostClient returns 200', async () => {
     const { sut, httpPostClientStub } = makeSut();
+    const httpResult = mockAccount();
     httpPostClientStub.response = {
-      statusCode: HttpStatusCode.serverError,
-    };
-    const promise = sut.auth(mockAuthentication());
-    expect(promise).rejects.toThrow(new UnexpectedError())
+      statusCode: HttpStatusCode.ok,
+      body: httpResult
+    }
+    const account = await sut.auth(mockAuthentication());
+    expect(account).toEqual(httpResult)
   });
 });
