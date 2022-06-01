@@ -1,9 +1,7 @@
 import { AccountModel } from "@/domain/models/account-model";
-import { AuthenticationParams } from "@/domain/usecases/authentication";
-import { InvalidCredentialsError } from "@/domain/errors/invalid-credentials-error";
-import { UnexpectedError } from "@/domain/errors/unexpected-error";
-import { HttpResponse, HttpStatusCode } from "@/data/protocols/http/http-response";
-import { HttpPostClient, httpPostParams } from "@/data/protocols/http/http-post-client";
+import { AuthenticationParams } from "@/domain/usecases";
+import { UnexpectedError, InvalidCredentialsError } from "@/domain/errors";
+import { HttpResponse, HttpStatusCode, HttpPostClient, httpPostParams } from "@/data/protocols/http";
 import { RemoteAuthentication } from "./remote-authentication";
 import { faker } from "@faker-js/faker";
 
