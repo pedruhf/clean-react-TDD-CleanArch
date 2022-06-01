@@ -1,7 +1,7 @@
-import { HttpPostClient, httpPostParams } from "../../protocols/http/http-post-client";
+import { HttpPostClient, httpPostParams } from "@/data/protocols/http/http-post-client";
 import { RemoteAuthentication } from "./remote-authentication";
 import { faker } from "@faker-js/faker";
-import { AuthenticationParams } from "domain/usecases/authentication";
+import { AuthenticationParams } from "@/domain/usecases/authentication";
 
 const mockAuthentication = (): AuthenticationParams => ({
   email: faker.internet.email(),
@@ -35,14 +35,14 @@ const makeSut = (url: string = faker.internet.url()): SutTypes => {
 };
 
 describe('RemoteAuthentication Usecase', () => {
-  test('should call httpPostClient with correct URL', async () => {
+  test('should call HttpPostClient with correct URL', async () => {
     const url = faker.internet.url();
     const { sut, httpPostClientStub } = makeSut(url);
     await sut.auth(mockAuthentication());
     expect(httpPostClientStub.url).toBe(url)
   });
 
-  test('should call httpPostClient with correct body', async () => {
+  test('should call HttpPostClient with correct body', async () => {
     const { sut, httpPostClientStub } = makeSut();
     const authenticationParams = mockAuthentication();
     await sut.auth(authenticationParams);
