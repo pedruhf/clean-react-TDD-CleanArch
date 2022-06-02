@@ -61,25 +61,6 @@ button {
     text-transform: uppercase;
   }
 
-  .inputWrap {
-    margin-top: 1rem;
-    display: flex;
-    align-items: center;
-    position: relative;
-
-    input {
-      flex-grow: 1;
-    }
-
-    svg {
-      color: #e40b0b;
-      font-size: 1.5rem;
-      position: absolute;
-      right: 0rem;
-      cursor: help;
-    }
-  }
-
   .submitButton {
     margin-top: 1.25rem;
   }
