@@ -1,9 +1,8 @@
 import React from "react";
-import Spinner from "@/presentation/components/spinner";
 import Header from "@/presentation/components/login-header";
 import Footer from "@/presentation/components/footer";
 import Input from "@/presentation/components/input";
-import { GoPrimitiveDot } from "react-icons/go";
+import FormStatus from "@/presentation/components/form-status";
 import styles from "./styles.scss";
 
 const Login: React.FC = () => {
@@ -16,10 +15,7 @@ const Login: React.FC = () => {
         <Input type="password" name="password" placeholder="Digite seu senha" />
         <button type="submit" className={styles.submitButton}>Entrar</button>
         <span className={styles.createAccountLink}>Criar uma conta</span>
-        <div className={styles.errorWrap}>
-          <Spinner className={styles.spinner} />
-          <span className={styles.error}>Error</span>
-        </div>
+        <FormStatus />
       </form>
       <Footer />
     </div>
