@@ -1,16 +1,14 @@
 import React from "react";
 import Spinner from "@/presentation/components/spinner";
-import Logo from "@/presentation/components/logo";
+import Header from "@/presentation/components/login-header";
+import Footer from "@/presentation/components/footer";
 import { GoPrimitiveDot } from "react-icons/go";
 import styles from "./styles.scss";
 
 const Login: React.FC = () => {
   return (
     <div className={styles.login}>
-      <header className={styles.header}>
-        <Logo />
-        <h1>4Dev - Enquetes para programadores</h1>
-      </header>
+      <Header />
       <form className={styles.form}>
         <h2>Login</h2>
         <div className={styles.inputWrap}>
@@ -28,7 +26,7 @@ const Login: React.FC = () => {
           <span className={styles.error}>Error</span>
         </div>
       </form>
-      <footer className={styles.footer}></footer>
+      <Footer />
     </div>
   );
 };
