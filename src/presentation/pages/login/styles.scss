@@ -1,0 +1,135 @@
+@import "../../styles/colors.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background: $background;
+}
+
+input[type="email"],
+input[type="password"] {
+  border: 1px solid $primaryLight;
+  line-height: 3rem;
+  border-radius: 0.25rem;
+  padding: 0 3rem 0 0.5rem;
+
+  &:focus {
+    outline: $primaryLight;
+  }
+}
+
+button {
+  background: $primary;
+  color: $white;
+  border: 0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 4rem;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
+
+.login {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.header {
+  border-top: 3rem solid $primaryDark;
+  display: flex;
+  flex-direction: column;
+  background: $primary;
+  align-items: center;
+
+  img {
+    margin-top: 3rem;
+  }
+
+  h1 {
+    color: $white;
+    margin: 1rem 0 3rem
+  }
+}
+
+.form {
+  width: calc(min(100%, 35rem));
+  display: flex;
+  flex-direction: column;
+  background: $white;
+  padding: 3rem;
+  border-radius: 0.4rem;
+  align-self: center;
+  box-shadow: 0px 1px 3px -1px $black;
+
+  h2 {
+    color: $primaryDark;
+    text-align: center;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+  }
+
+  .inputWrap {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    input {
+      flex-grow: 1;
+    }
+
+    svg {
+      color: #e40b0b;
+      font-size: 1.5rem;
+      position: absolute;
+      right: 0rem;
+      cursor: help;
+    }
+  }
+
+  .submitButton {
+    margin-top: 1.25rem;
+  }
+
+  .createAccountLink {
+    text-align: center;
+    color: $primary;
+    text-transform: lowercase;
+    margin-top: 1rem;
+    cursor: pointer;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .errorWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    .spinner {
+      margin-top: 2rem;
+    }
+
+    .error {
+      margin-top: 2rem;
+      color: $primaryLight;
+    }
+  }
+}
+
+.footer {
+  height: 4rem;
+  background: $primary;
+}
