@@ -1,14 +1,11 @@
 import React from "react";
-import Header from "@/presentation/components/login-header";
-import Footer from "@/presentation/components/footer";
-import Input from "@/presentation/components/input";
-import FormStatus from "@/presentation/components/form-status";
+import { LoginHeader, Footer, FormStatus, Input } from "@/presentation/components";
 import styles from "./styles.scss";
 
 const Login: React.FC = () => {
   return (
     <div className={styles.login}>
-      <Header />
+      <LoginHeader />
       <form className={styles.form}>
         <h2>Login</h2>
         <Input type="email" name="email" placeholder="Digite seu e-mail" />
