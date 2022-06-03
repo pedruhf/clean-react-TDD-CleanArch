@@ -10,11 +10,14 @@
     flex-grow: 1;
   }
 
-  svg {
-    color: $error;
-    font-size: 1.5rem;
+  span {
     position: absolute;
     right: 0rem;
-    cursor: help;
+
+    svg {
+      color: $error;
+      font-size: 1.5rem;
+      cursor: help;
+    }
   }
 }
