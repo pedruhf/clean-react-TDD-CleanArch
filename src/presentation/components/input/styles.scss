@@ -1,3 +1,5 @@
+@import "../../styles/colors.scss";
+
 .inputWrap {
   margin-top: 1rem;
   display: flex;
@@ -9,7 +11,7 @@
   }
 
   svg {
-    color: #e40b0b;
+    color: $error;
     font-size: 1.5rem;
     position: absolute;
     right: 0rem;
