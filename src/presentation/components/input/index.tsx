@@ -22,11 +22,11 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   };
 
   const getStatus = (): string => {
-    return colors.error;
+    return error ? colors.error : colors.success;
   };
 
   const getTitle = (): string => {
-    return error;
+    return error ?? "Tudo certo!";
   };
 
   return (

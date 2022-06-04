@@ -7,5 +7,6 @@ export const colors = {
   primaryLight: "#BC477B",
   disabledBackground: "#CCC",
   disabledText: "#666",
+  success: "#06FD58",
   error: "#E40B0B",
 };
