@@ -21,10 +21,10 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
     passwordError: "",
   });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setState({ ...state, isLoading: true });
-    authentication.auth({
+    await authentication.auth({
       email: state.email,
       password: state.password,
     });
