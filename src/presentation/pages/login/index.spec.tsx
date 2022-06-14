@@ -4,6 +4,8 @@ import { Authentication, AuthenticationParams } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
 import { InvalidCredentialsError } from "@/domain/errors";
 import Login from "./index";
+import { createMemoryHistory } from "history";
+import { Router } from "react-router-dom";
 import { render, RenderResult, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
 import "jest-localstorage-mock";
@@ -61,11 +63,16 @@ type SutParams = {
   validationError: string;
 };
 
+const history = createMemoryHistory();
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.validationError;
   const authenticationSpy = new AuthenticationSpy();
-  const sut = render(<Login validation={validationStub} authentication={authenticationSpy} />);
+  const sut = render(
+  <Router history={history}>
+    <Login validation={validationStub} authentication={authenticationSpy} />
+  </Router>
+  );
 
   return {
     sut,
@@ -181,5 +188,13 @@ describe('Login Component', () => {
     simulateValidSubmit(sut);
     await waitFor(() => sut.getByTestId("login-form"));
     expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+  });
+
+  test('Should go to signup page', async () => {
+    const { sut } = makeSut();
+    const createAccountLink  = sut.getByTestId("create-account-link");
+    fireEvent.click(createAccountLink);
+    expect(history.length).toBe(2);
+    expect(history.location.pathname).toBe("/signup");
   });
 });
