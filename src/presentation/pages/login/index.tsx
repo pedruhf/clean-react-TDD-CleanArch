@@ -3,7 +3,7 @@ import { Authentication } from "@/domain/usecases";
 import { LoginHeader, Footer, FormStatus, Input } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styles from "./styles.scss";
 
 type LoginProps = {
@@ -12,6 +12,7 @@ type LoginProps = {
 };
 
 const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps) => {
+  const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
     email: "",
@@ -35,6 +36,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
       });
 
       localStorage.setItem("accessToken", account.accessToken);
+      history.replace("/");
     } catch (error) {
       setState({
         ...state,
