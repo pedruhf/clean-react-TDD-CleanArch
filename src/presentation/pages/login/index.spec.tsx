@@ -3,7 +3,7 @@ import { Validation } from "@/presentation/protocols/validation";
 import { Authentication, AuthenticationParams } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
 import { InvalidCredentialsError } from "@/domain/errors";
-import Login from "./index";
+import { Login } from "@/presentation/pages";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import { render, RenderResult, fireEvent, cleanup, waitFor } from "@testing-library/react";
