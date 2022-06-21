@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Authentication } from "@/domain/usecases";
+import { Authentication, SaveAccessToken } from "@/domain/usecases";
 import { LoginHeader, Footer, FormStatus, Input } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
@@ -8,10 +8,11 @@ import styles from "./styles.scss";
 
 type LoginProps = {
   validation: Validation,
-  authentication: Authentication
+  authentication: Authentication,
+  saveAccessToken: SaveAccessToken,
 };
 
-const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps) => {
+const Login: React.FC<LoginProps> = ({ validation, authentication, saveAccessToken }: LoginProps) => {
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
@@ -35,7 +36,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
         password: state.password,
       });
 
-      localStorage.setItem("accessToken", account.accessToken);
+      await saveAccessToken.save(account.accessToken);
       history.replace("/");
     } catch (error) {
       setState({
