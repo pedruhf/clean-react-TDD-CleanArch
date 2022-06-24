@@ -94,4 +94,10 @@ describe('RemoteAddAccount usecase', () => {
     const addPromise = sut.add(mockAddAccountParams());
     await expect(addPromise).rejects.toThrow(new UnexpectedError())
   });
+
+  test('Should return an AccountModel if HttpPostClient on success', async () => {
+    const { sut, httpPostClientSpy } = makeSut();
+    const accountModel = await sut.add(mockAddAccountParams());
+    expect(accountModel).toEqual(httpPostClientSpy.response.body);
+  });
 });
