@@ -20,6 +20,7 @@ class HttpPostClientSpy implements HttpPostClient<AddAccountParams, AccountModel
   response: HttpResponse<AccountModel>;
   async post(params: httpPostParams<AddAccountParams>): Promise<HttpResponse<AccountModel>> {
     this.url = params.url;
+    this.body = params.body;
     return;
   }
 }
@@ -40,10 +41,18 @@ const makeSut = (url: string = faker.internet.url()): SutTypes => {
 };
 
 describe('RemoteAddAccount usecase', () => {
-  test('Should call HttpPostClient with correct URL', async () => {
+  test('Should call HttpPostClient with correct URL and body', async () => {
     const url = faker.internet.url();
     const { sut, httpPostClientSpy } = makeSut(url);
     await sut.add(mockAddAccountParams());
     expect(httpPostClientSpy.url).toBe(url);
+  });
+
+  test('Should call HttpPostClient with correct body', async () => {
+    const url = faker.internet.url();
+    const { sut, httpPostClientSpy } = makeSut(url);
+    const addAccountParams = mockAddAccountParams();
+    await sut.add(addAccountParams);
+    expect(httpPostClientSpy.body).toBe(addAccountParams);
   });
 });
