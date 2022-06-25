@@ -1,5 +1,4 @@
 import React from "react";
-import { Validation } from "@/presentation/protocols/validation";
 import { Authentication, AuthenticationParams, SaveAccessToken } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
 import { InvalidCredentialsError } from "@/domain/errors";
@@ -8,7 +7,8 @@ import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import { render, RenderResult, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
-import { testButtonIsDisable, testChildCount, testStatusForField } from "@/presentation/test/form-helper";
+import { testButtonIsDisable, testChildCount, testElementExists, testStatusForField } from "@/presentation/test/form-helper";
+import { ValidationStub } from "@/presentation/test";
 
 const simulateValidSubmit = async (
   sut: RenderResult,
@@ -30,16 +30,6 @@ const populateEmailField = (sut: RenderResult, email = faker.internet.email()): 
 const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
   const passwordInput = sut.getByTestId("password");
   fireEvent.input(passwordInput, { target: { value: password } });
-};
-
-const testElementExists = (sut: RenderResult, field: string): void => {
-  const el = sut.getByTestId(field);
-  expect(el).toBeTruthy();
-};
-
-const testElementText = (sut: RenderResult, field: string, text: string): void => {
-  const el = sut.getByTestId(field);
-  expect(el.textContent).toBe(text);
 };
 
 const mockAccount = (): AccountModel => ({
@@ -64,14 +54,6 @@ class SaveAccessTokenMock implements SaveAccessToken {
     this.accessToken = accessToken;
   }
 }
-
-class ValidationStub implements Validation {
-  errorMessage: string;
-
-  validate(fieldName: string, fieldValue: string): string {
-    return this.errorMessage;
-  }
-};
 
 type SutTypes = {
   sut: RenderResult,
