@@ -7,7 +7,7 @@ import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import { render, RenderResult, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
-import { testButtonIsDisable, testChildCount, testElementExists, testStatusForField } from "@/presentation/test/form-helper";
+import { populateField, testButtonIsDisable, testChildCount, testElementExists, testStatusForField } from "@/presentation/test/form-helper";
 import { ValidationStub } from "@/presentation/test";
 
 const simulateValidSubmit = async (
@@ -15,21 +15,11 @@ const simulateValidSubmit = async (
   email = faker.internet.email(),
   password = faker.internet.password()
 ): Promise<void> => {
-  populateEmailField(sut, email);
-  populatePasswordField(sut, password);
+  populateField(sut, "email", email);
+  populateField(sut, "password", password);
   const form = sut.getByTestId("login-form");
   fireEvent.submit(form);
   await waitFor(() => form);
-};
-
-const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
-  const emailInput = sut.getByTestId("email");
-  fireEvent.input(emailInput, { target: { value: email } });
-};
-
-const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
-  const passwordInput = sut.getByTestId("password");
-  fireEvent.input(passwordInput, { target: { value: password } });
 };
 
 const mockAccount = (): AccountModel => ({
@@ -103,33 +93,33 @@ describe('Login Component', () => {
   test('Should show email error if Validation fails', () => {
     const validationError = faker.random.words();
     const { sut, } = makeSut({ validationError });
-    populateEmailField(sut);
+    populateField(sut, "email");
     testStatusForField(sut, "email", validationError);
   });
 
   test('Should show password error if Validation fails', () => {
     const validationError = faker.random.words();
     const { sut, } = makeSut({ validationError });
-    populatePasswordField(sut);
+    populateField(sut, "password");
     testStatusForField(sut, "password", validationError);
   });
 
   test('Should show valid email state if Validation succeeds', () => {
     const { sut } = makeSut();
-    populateEmailField(sut);
+    populateField(sut, "email");
     testStatusForField(sut, "email", "Tudo certo!")
   });
 
   test('Should show valid password state if Validation succeeds', () => {
     const { sut } = makeSut();
-    populatePasswordField(sut);
+    populateField(sut, "password");
     testStatusForField(sut, "password", "Tudo certo!");
   });
 
   test('Should enable submit button if form is valid', () => {
     const { sut } = makeSut();
-    populateEmailField(sut);
-    populatePasswordField(sut);
+    populateField(sut, "email");
+    populateField(sut, "password");
     testButtonIsDisable(sut, "submit-button", false);
   });
 
