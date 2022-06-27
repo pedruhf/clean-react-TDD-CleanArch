@@ -72,4 +72,10 @@ describe('SignUp Component', () => {
     populateField(sut, "passwordConfirmation");
     testStatusForField(sut, "passwordConfirmation", validationError);
   });
+
+  test('Should show valid name state if validation succeeds', () => {
+    const { sut } = makeSut();
+    populateField(sut, "name");
+    testStatusForField(sut, "name", "Tudo certo!");
+  });
 });
