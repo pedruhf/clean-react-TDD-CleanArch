@@ -25,9 +25,11 @@ const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName
 
 class AddAccountSpy implements AddAccount {
   public params: AddAccountParams;
+  public callsCount: number = 0;
 
   async add(params: AddAccountParams): Promise<AccountModel> {
     this.params = params;
+    this.callsCount++;
     return;
   }
 }
@@ -140,5 +142,15 @@ describe('SignUp Component', () => {
     const password = faker.internet.password();
     simulateValidSubmit(sut, name, email, password);
     expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password });
+  });
+
+  test('Should call AddAccount only once', () => {
+    const { sut, addAccountSpy } = makeSut();
+    const name = faker.name.findName();
+    const email = faker.internet.email();
+    const password = faker.internet.password();
+    simulateValidSubmit(sut, name, email, password);
+    simulateValidSubmit(sut, name, email, password);
+    expect(addAccountSpy.callsCount).toBe(1);
   });
 });
