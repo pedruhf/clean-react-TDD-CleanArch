@@ -5,10 +5,21 @@ import {
   populateField,
   testButtonIsDisable,
   testChildCount,
+  testElementExists,
   testStatusForField
 } from "@/presentation/test/form-helper";
-import { cleanup, render, RenderResult } from "@testing-library/react";
+import { cleanup, fireEvent, render, RenderResult, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
+
+const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+  populateField(sut, "name", name);
+  populateField(sut, "email", email);
+  populateField(sut, "password", password);
+  populateField(sut, "passwordConfirmation", password);
+  const form = sut.getByTestId("signup-form");
+  fireEvent.submit(form);
+  await waitFor(() => form);
+};
 
 type SutTypes = {
   sut: RenderResult
@@ -99,10 +110,13 @@ describe('SignUp Component', () => {
 
   test('Should enable submit button if form is valid', () => {
     const { sut } = makeSut();
-    populateField(sut, "name");
-    populateField(sut, "email");
-    populateField(sut, "password");
-    populateField(sut, "passwordConfirmation");
+    simulateValidSubmit(sut);
     testButtonIsDisable(sut, "submit-button", false);
+  });
+
+  test('Should show spinner on submit form', () => {
+    const { sut } = makeSut();
+    simulateValidSubmit(sut);
+    testElementExists(sut, "spinner")
   });
 });
