@@ -48,8 +48,14 @@ describe('SignUp Component', () => {
   test('Should show name error with validation fails', () => {
     const validationError = faker.random.words();
     const { sut } = makeSut({ validationError });
-    testChildCount(sut, "error-wrap", 0);
     populateField(sut, "name");
     testStatusForField(sut, "name", validationError);
+  });
+
+  test('Should show email error with validation fails', () => {
+    const validationError = faker.random.words();
+    const { sut } = makeSut({ validationError });
+    populateField(sut, "email");
+    testStatusForField(sut, "email", validationError);
   });
 });
