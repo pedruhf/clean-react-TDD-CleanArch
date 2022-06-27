@@ -3,12 +3,14 @@ import { LoginHeader, Footer, FormStatus, Input } from "@/presentation/component
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
 import styles from "./styles.scss";
+import { AddAccount } from "@/domain/usecases";
 
 type SignUpProps = {
-  validation: Validation
+  validation: Validation;
+  addAccount: AddAccount;
 };
 
-const SignUp: React.FC<SignUpProps> = ({ validation }: SignUpProps) => {
+const SignUp: React.FC<SignUpProps> = ({ validation, addAccount }: SignUpProps) => {
   const [state, setState] = useState({
     isLoading: false,
     name: "",
@@ -34,6 +36,12 @@ const SignUp: React.FC<SignUpProps> = ({ validation }: SignUpProps) => {
     setState({
       ...state,
       isLoading: true,
+    });
+    await addAccount.add({
+      name: state.name,
+      email: state.email,
+      password: state.password,
+      passwordConfirmation: state.passwordConfirmation,
     });
   };
 
