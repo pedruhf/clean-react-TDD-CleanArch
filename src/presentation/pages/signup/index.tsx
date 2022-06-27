@@ -22,6 +22,13 @@ const SignUp: React.FC<SignUpProps> = ({ validation }: SignUpProps) => {
     mainError: "",
   });
 
+  const formIsValid = (): boolean => {
+    return !state.nameError
+      && !state.emailError
+      && !state.passwordError
+      && !state.passwordConfirmationError;
+  };
+
   useEffect(() => {
     setState({
       ...state,
@@ -42,7 +49,7 @@ const SignUp: React.FC<SignUpProps> = ({ validation }: SignUpProps) => {
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirmation" placeholder="Digite sua senha" />
-          <button data-testid="submit-button" disabled type="submit" className={styles.submitButton}>Criar</button>
+          <button data-testid="submit-button" disabled={!formIsValid()} type="submit" className={styles.submitButton}>Criar</button>
           <span className={styles.loginLink}>Voltar para login</span>
           <FormStatus />
         </form>
