@@ -45,7 +45,6 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, saveAccessTok
         mainError: error.message
       });
     }
-    
   };
 
   useEffect(() => {
