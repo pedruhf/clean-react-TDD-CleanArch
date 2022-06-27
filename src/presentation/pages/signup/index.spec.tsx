@@ -10,6 +10,8 @@ import {
 } from "@/presentation/test/form-helper";
 import { cleanup, fireEvent, render, RenderResult, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
+import { AddAccount, AddAccountParams } from "@/domain/usecases";
+import { AccountModel } from "@/domain/models";
 
 const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   populateField(sut, "name", name);
@@ -21,8 +23,18 @@ const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName
   await waitFor(() => form);
 };
 
+class AddAccountSpy implements AddAccount {
+  public params: AddAccountParams;
+
+  async add(params: AddAccountParams): Promise<AccountModel> {
+    this.params = params;
+    return;
+  }
+}
+
 type SutTypes = {
-  sut: RenderResult
+  sut: RenderResult;
+  addAccountSpy: AddAccountSpy;
 };
 
 type SutParams = {
@@ -32,13 +44,14 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.validationError;
-
+  const addAccountSpy = new AddAccountSpy();
   const sut = render(
-    <SignUp validation={validationStub} />
+    <SignUp validation={validationStub} addAccount={addAccountSpy} />
   );
 
   return {
     sut,
+    addAccountSpy,
   };
 };
 
@@ -118,5 +131,14 @@ describe('SignUp Component', () => {
     const { sut } = makeSut();
     simulateValidSubmit(sut);
     testElementExists(sut, "spinner")
+  });
+
+  test('Should call AddAccount with correct values', () => {
+    const { sut, addAccountSpy } = makeSut();
+    const name = faker.name.findName();
+    const email = faker.internet.email();
+    const password = faker.internet.password();
+    simulateValidSubmit(sut, name, email, password);
+    expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password });
   });
 });
