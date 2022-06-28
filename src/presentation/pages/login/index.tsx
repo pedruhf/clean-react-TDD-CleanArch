@@ -18,16 +18,16 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, saveAccessTok
     isLoading: false,
     isFormInvalid: true,
     email: "",
-    password: "",
-    mainError: "",
     emailError: "",
+    password: "",
     passwordError: "",
+    mainError: "",
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
-      if (state.isLoading || state.emailError || state.passwordError) {
+      if (state.isLoading || state.isFormInvalid) {
         return;
       }
   
