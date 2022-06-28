@@ -6,12 +6,14 @@ import {
   testButtonIsDisable,
   testChildCount,
   testElementExists,
+  testElementText,
   testStatusForField
 } from "@/presentation/test/form-helper";
 import { cleanup, fireEvent, render, RenderResult, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
 import { AddAccount, AddAccountParams } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
+import { EmailInUseError } from "@/domain/errors";
 
 const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   populateField(sut, "name", name);
@@ -152,5 +154,21 @@ describe('SignUp Component', () => {
     simulateValidSubmit(sut, name, email, password);
     simulateValidSubmit(sut, name, email, password);
     expect(addAccountSpy.callsCount).toBe(1);
+  });
+
+  test('Should not call AddAccount if form is invalid', () => {
+    const validationError = faker.random.words();
+    const { sut, addAccountSpy } = makeSut({ validationError });
+    simulateValidSubmit(sut);
+    expect(addAccountSpy.callsCount).toBe(0);
+  });
+
+  test('Should present error if AddAccount fails', async () => {
+    const { sut, addAccountSpy } = makeSut();
+    const error = new EmailInUseError();
+    jest.spyOn(addAccountSpy, "add").mockRejectedValueOnce(error);
+    await simulateValidSubmit(sut);
+    // testElementText(sut, "main-error", error.message);
+    testChildCount(sut, "error-wrap", 1);
   });
 });
