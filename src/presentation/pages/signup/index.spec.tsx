@@ -1,6 +1,6 @@
 import React from "react";
 import SignUp from "./index";
-import { ValidationStub } from "@/presentation/test";
+import { SaveAccessTokenMock, ValidationStub } from "@/presentation/test";
 import {
   populateField,
   testButtonIsDisable,
@@ -9,11 +9,14 @@ import {
   testElementText,
   testStatusForField
 } from "@/presentation/test/form-helper";
-import { cleanup, fireEvent, render, RenderResult, waitFor } from "@testing-library/react";
-import { faker } from "@faker-js/faker";
 import { AddAccount, AddAccountParams } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
 import { EmailInUseError } from "@/domain/errors";
+import { cleanup, fireEvent, render, RenderResult, waitFor } from "@testing-library/react";
+import { Router } from "react-router-dom";
+import { faker } from "@faker-js/faker";
+import { createMemoryHistory } from "history";
+import { mockAccount } from "@/domain/test";
 
 const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   populateField(sut, "name", name);
@@ -28,34 +31,45 @@ const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName
 class AddAccountSpy implements AddAccount {
   public params: AddAccountParams;
   public callsCount: number = 0;
+  public account = mockAccount();
 
   async add(params: AddAccountParams): Promise<AccountModel> {
     this.params = params;
     this.callsCount++;
-    return;
+    return this.account;
   }
 }
 
 type SutTypes = {
   sut: RenderResult;
   addAccountSpy: AddAccountSpy;
+  saveAccessTokenMock: SaveAccessTokenMock;
 };
 
 type SutParams = {
   validationError: string;
 };
 
+const history = createMemoryHistory({ initialEntries: ["/signup"] });
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   validationStub.errorMessage = params?.validationError;
   const addAccountSpy = new AddAccountSpy();
+  const saveAccessTokenMock = new SaveAccessTokenMock();
   const sut = render(
-    <SignUp validation={validationStub} addAccount={addAccountSpy} />
+    <Router history={history}>
+      <SignUp
+        validation={validationStub}
+        addAccount={addAccountSpy}
+        saveAccessToken={saveAccessTokenMock}
+      />
+    </Router>
   );
 
   return {
     sut,
     addAccountSpy,
+    saveAccessTokenMock,
   };
 };
 
@@ -170,5 +184,13 @@ describe('SignUp Component', () => {
     await simulateValidSubmit(sut);
     // testElementText(sut, "main-error", error.message);
     testChildCount(sut, "error-wrap", 1);
+  });
+
+  test('Should callSaveAccessToken on success', async () => {
+    const { sut, addAccountSpy, saveAccessTokenMock } = makeSut();
+    await simulateValidSubmit(sut);
+    expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken);
+    expect(history.length).toBe(1);
+    expect(history.location.pathname).toBe("/");
   });
 });

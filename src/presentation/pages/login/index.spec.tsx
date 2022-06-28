@@ -8,7 +8,8 @@ import { Router } from "react-router-dom";
 import { render, RenderResult, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
 import { populateField, testButtonIsDisable, testChildCount, testElementExists, testStatusForField } from "@/presentation/test/form-helper";
-import { ValidationStub } from "@/presentation/test";
+import { SaveAccessTokenMock, ValidationStub } from "@/presentation/test";
+import { mockAccount } from "@/domain/test";
 
 const simulateValidSubmit = async (
   sut: RenderResult,
@@ -22,9 +23,7 @@ const simulateValidSubmit = async (
   await waitFor(() => form);
 };
 
-const mockAccount = (): AccountModel => ({
-  accessToken: faker.datatype.uuid(),
-});
+
 class AuthenticationSpy implements Authentication {
   account = mockAccount();
   callsCount = 0;
@@ -36,14 +35,6 @@ class AuthenticationSpy implements Authentication {
     return Promise.resolve(this.account);
   }
 };
-
-class SaveAccessTokenMock implements SaveAccessToken {
-  public accessToken: string;
-
-  async save (accessToken: string): Promise<void> {
-    this.accessToken = accessToken;
-  }
-}
 
 type SutTypes = {
   sut: RenderResult,
