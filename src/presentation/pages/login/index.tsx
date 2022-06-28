@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Authentication, SaveAccessToken } from "@/domain/usecases";
-import { LoginHeader, Footer, FormStatus, Input } from "@/presentation/components";
+import { LoginHeader, Footer, FormStatus, Input, SubmitButton } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
 import { Link, useHistory } from "react-router-dom";
@@ -16,6 +16,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, saveAccessTok
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: "",
     password: "",
     mainError: "",
@@ -48,10 +49,13 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, saveAccessTok
   };
 
   useEffect(() => {
+    const emailError = validation.validate("name", state.email);
+    const passwordError = validation.validate("name", state.password);
     setState({
       ...state,
-      emailError: validation.validate("email", state.email),
-      passwordError: validation.validate("password", state.password),
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError,
     });
   }, [state.email, state.password]);
 
@@ -63,7 +67,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, saveAccessTok
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
-          <button data-testid="submit-button" disabled={!!state.emailError || !!state.passwordError} type="submit" className={styles.submitButton}>Entrar</button>
+          <SubmitButton text="Entrar" />
           <Link
             to="/signup"
             data-testid="create-account-link"

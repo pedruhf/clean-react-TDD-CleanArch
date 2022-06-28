@@ -24,17 +24,8 @@
     text-transform: uppercase;
   }
 
-  .submitButton {
+  button {
     margin-top: 1.25rem;
-
-    &:disabled {
-      background: $disabledBackground;
-      color: $disabledText;
-
-      &:hover {
-        filter: brightness(1);
-      }
-    }
   }
 
   .loginLink {
