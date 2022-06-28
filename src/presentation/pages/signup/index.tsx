@@ -3,7 +3,7 @@ import { AddAccount, SaveAccessToken } from "@/domain/usecases";
 import { LoginHeader, Footer, FormStatus, Input } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styles from "./styles.scss";
 
 type SignUpProps = {
@@ -82,7 +82,7 @@ const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, saveAccessToken
           <Input type="password" name="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirmation" placeholder="Digite sua senha" />
           <button data-testid="submit-button" disabled={!formIsValid()} type="submit" className={styles.submitButton}>Criar</button>
-          <span className={styles.loginLink}>Voltar para login</span>
+          <Link to="/login" replace data-testid="login-link" className={styles.loginLink}>Voltar para login</Link>
           <FormStatus />
         </form>
       </FormContext.Provider>
