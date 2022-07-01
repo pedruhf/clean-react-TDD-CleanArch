@@ -41,7 +41,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --open",
-    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test": "jest --passWithNoTests --no-cache --runInBand --silent",
     "test:watch": " npm test -- --watch",
     "test:ci": "npm test -- --coverage",
     "test:cypress": "cypress open"
