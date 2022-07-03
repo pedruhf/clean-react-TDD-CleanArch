@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
 
+const baseUrl: string = Cypress.config().baseUrl;
+
 describe("Login", () => {
   beforeEach(() => {
     cy.visit("login");
@@ -40,6 +42,9 @@ describe("Login", () => {
     cy.getByTestId("submit-button").click();
     cy.getByTestId("error-wrap")
       .getByTestId("spinner").should("exist")
-      .getByTestId("main-error").should("not.exist");
+      .getByTestId("main-error").should("not.exist")
+      .getByTestId("spinner").should("not.exist")
+      .getByTestId("main-error").should("contain.text", "Credenciais inválidas");
+    cy.url().should("eq", `${baseUrl}/login`);
   });
 });
