@@ -1,6 +1,7 @@
 import { SetStorage } from "@/data/protocols/cache";
 import { LocalSaveAccessToken } from "./local-save-access-token";
 import { faker } from "@faker-js/faker";
+import { UnexpectedError } from "@/domain/errors";
 
 class SetStorageMock implements SetStorage {
   public key: string;
@@ -41,5 +42,11 @@ describe('LocalSaveAccessToken usecase', () => {
     jest.spyOn(setStorageMock, "set").mockRejectedValueOnce(new Error());
     const promise = sut.save(accessToken);
     await expect(promise).rejects.toThrow();
+  });
+
+  test('Should throw if accessToken is falsy', async () => {
+    const { sut } = makeSut();
+    const promise = sut.save(undefined);
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 });
