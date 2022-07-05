@@ -103,6 +103,19 @@ describe("Login", () => {
     cy.get("@request.all").should("have.length", 1);
   });
 
+  it("Should not call submits if form is invalid", () => {
+    cy.route({
+      method: "POST",
+      url: /login/,
+      status: 200,
+      response: {
+        accessToken: faker.datatype.uuid(),
+      },
+    }).as("request");
+    cy.getByTestId("email").focus().type("mango@gmail.com").type("{enter}");
+    cy.get("@request.all").should("have.length", 0);
+  });
+
   it("Should save accessToken if valid credentials are provided", () => {
     cy.route({
       method: "POST",
