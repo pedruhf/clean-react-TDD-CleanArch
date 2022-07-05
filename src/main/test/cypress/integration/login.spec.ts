@@ -88,6 +88,21 @@ describe("Login", () => {
     cy.url().should("eq", `${baseUrl}/login`);
   });
 
+  it("Should prevent multiple submits", () => {
+    cy.route({
+      method: "POST",
+      url: /login/,
+      status: 200,
+      response: {
+        accessToken: faker.datatype.uuid(),
+      },
+    }).as("request");
+    cy.getByTestId("email").focus().type("mango@gmail.com");
+    cy.getByTestId("password").focus().type("12345");
+    cy.getByTestId("submit-button").dblclick();
+    cy.get("@request.all").should("have.length", 1);
+  });
+
   it("Should save accessToken if valid credentials are provided", () => {
     cy.route({
       method: "POST",
