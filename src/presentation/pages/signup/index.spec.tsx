@@ -118,25 +118,25 @@ describe('SignUp Component', () => {
   test('Should show valid name state if validation succeeds', () => {
     const { sut } = makeSut();
     populateField(sut, "name");
-    testStatusForField(sut, "name", "Tudo certo!");
+    testStatusForField(sut, "name");
   });
 
   test('Should show valid email state if validation succeeds', () => {
     const { sut } = makeSut();
     populateField(sut, "email");
-    testStatusForField(sut, "email", "Tudo certo!");
+    testStatusForField(sut, "email");
   });
 
   test('Should show valid password state if validation succeeds', () => {
     const { sut } = makeSut();
     populateField(sut, "password");
-    testStatusForField(sut, "password", "Tudo certo!");
+    testStatusForField(sut, "password");
   });
 
   test('Should show valid passwordConfirmation state if validation succeeds', () => {
     const { sut } = makeSut();
     populateField(sut, "passwordConfirmation");
-    testStatusForField(sut, "passwordConfirmation", "Tudo certo!");
+    testStatusForField(sut, "passwordConfirmation");
   });
 
   test('Should enable submit button if form is valid', () => {

@@ -98,13 +98,13 @@ describe('Login Component', () => {
   test('Should show valid email state if Validation succeeds', () => {
     const { sut } = makeSut();
     populateField(sut, "email");
-    testStatusForField(sut, "email", "Tudo certo!")
+    testStatusForField(sut, "email")
   });
 
   test('Should show valid password state if Validation succeeds', () => {
     const { sut } = makeSut();
     populateField(sut, "password");
-    testStatusForField(sut, "password", "Tudo certo!");
+    testStatusForField(sut, "password");
   });
 
   test('Should enable submit button if form is valid', () => {

@@ -22,32 +22,29 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
     })
   };
 
-  const getStatus = (): string => {
-    return error ? colors.error : colors.success;
-  };
-
-  const getTitle = (): string => {
-    return error || "Tudo certo!";
-  };
-
   return (
-    <div className={styles.inputWrap}>
+    <div
+      className={styles.inputWrap}
+      data-status={error ? "invalid" : "valid"}
+      data-testid={`${props.name}-wrap`}
+    >
       <input
         {...props}
         ref={inputRef}
+        title={error}
         placeholder=" "
-        data-testid={props.name}
         readOnly
         onFocus={enableInput}
         onChange={handleChange}
+        data-testid={props.name}
       />
-      <label onClick={() => { inputRef.current.focus() }}>{props.placeholder}</label>
-      <span
-        data-testid={`${props.name}-status`}
-        title={getTitle()}
+      <label
+        onClick={() => { inputRef.current.focus() }}
+        title={error}
+        data-testid={`${props.name}-label`}
       >
-        <GoPrimitiveDot color={getStatus()} />
-      </span>
+        {props.placeholder}
+      </label>
     </div>
   );
 };
