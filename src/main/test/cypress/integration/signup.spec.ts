@@ -108,4 +108,10 @@ describe("SignUp", () => {
     cy.getByTestId("submit-button").dblclick();
     MockFormHelper.testHttpCallsCount(1);
   });
+
+  it("Should not call submits if form is invalid", () => {
+    MockHttpHelper.mockOk();
+    cy.getByTestId("email").focus().type(faker.internet.email()).type("{enter}");
+    MockFormHelper.testHttpCallsCount(0);
+  });
 });
