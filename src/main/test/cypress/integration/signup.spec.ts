@@ -81,4 +81,11 @@ describe("SignUp", () => {
     MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
     MockFormHelper.testUrl("/signup");
   });
+
+  it("Should present UnexpectedError if invalid data is returned", () => {
+    MockHttpHelper.mockInvalidData();
+    simulateValidSubmit();
+    MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
+    MockFormHelper.testUrl("/signup");
+  });
 });
