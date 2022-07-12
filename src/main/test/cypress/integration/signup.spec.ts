@@ -88,4 +88,13 @@ describe("SignUp", () => {
     MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
     MockFormHelper.testUrl("/signup");
   });
+
+  it("Should save accessToken if valid credentials are provided", () => {
+    MockHttpHelper.mockOk();
+    simulateValidSubmit();
+    cy.getByTestId("spinner").should("not.exist");
+    cy.getByTestId("main-error").should("not.exist");
+    MockFormHelper.testUrl("/");
+    MockFormHelper.testLocalStorageItem("accessToken");
+  });
 });
