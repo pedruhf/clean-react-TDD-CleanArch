@@ -14,14 +14,14 @@ const mockAuthentication = (): AuthenticationParams => ({
   password: faker.internet.password(),
 });
 
-class HttpPostClientStub<T, R> implements HttpPostClient<T,  R> {
+class HttpPostClientSpy<R> implements HttpPostClient<R> {
   public url?: string;
-  public body?: T;
+  public body?: any;
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
   };
 
-  async post(params: httpPostParams<T>): Promise<HttpResponse<R>> {
+  async post(params: httpPostParams): Promise<HttpResponse<R>> {
     this.url = params.url;
     this.body = params.body;
     return Promise.resolve(this.response);
@@ -30,11 +30,11 @@ class HttpPostClientStub<T, R> implements HttpPostClient<T,  R> {
 
 type SutTypes = {
   sut: RemoteAuthentication;
-  httpPostClientStub: HttpPostClient<AuthenticationParams, AccountModel>;
+  httpPostClientStub: HttpPostClientSpy<AccountModel>;
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientStub = new HttpPostClientStub<AuthenticationParams, AccountModel>(); 
+  const httpPostClientStub = new HttpPostClientSpy<AccountModel>(); 
   const sut = new RemoteAuthentication(url, httpPostClientStub);
 
   return {

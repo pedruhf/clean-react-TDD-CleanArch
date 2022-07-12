@@ -15,13 +15,13 @@ const mockAddAccountParams = (): AddAccountParams => {
   };
 };
 
-class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
+class HttpPostClientSpy<R> implements HttpPostClient<R> {
   url?: string;
-  body?: T;
+  body?: any;
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
   };
-  async post(params: httpPostParams<T>): Promise<HttpResponse<R>> {
+  async post(params: httpPostParams): Promise<HttpResponse<R>> {
     this.url = params.url;
     this.body = params.body;
     return this.response;
@@ -30,11 +30,11 @@ class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
 
 type SutTypes = {
   sut: RemoteAddAccount;
-  httpPostClientSpy: HttpPostClient<AddAccountParams, AccountModel>
+  httpPostClientSpy: HttpPostClientSpy<AccountModel>
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientSpy = new HttpPostClientSpy<AddAccountParams, AccountModel>()
+  const httpPostClientSpy = new HttpPostClientSpy<AccountModel>()
   const sut = new RemoteAddAccount(url, httpPostClientSpy);
 
   return {

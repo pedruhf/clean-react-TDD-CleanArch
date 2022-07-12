@@ -11,7 +11,7 @@ const mockedAxiosResult = {
 };
 mockedAxios.post.mockResolvedValue(mockedAxiosResult);
 
-const mockPostRequest = (): httpPostParams<any> => ({
+const mockPostRequest = (): httpPostParams => ({
   url: faker.internet.url(),
   body: JSON.parse(faker.datatype.json()),
 });
