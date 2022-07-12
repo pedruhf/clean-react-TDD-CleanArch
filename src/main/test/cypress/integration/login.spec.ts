@@ -81,7 +81,7 @@ describe("Login", () => {
 
   it("Should not call submits if form is invalid", () => {
     MockHttpHelper.mockOk();
-    cy.getByTestId("email").focus().type("mango@gmail.com").type("{enter}");
+    cy.getByTestId("email").focus().type(faker.internet.email()).type("{enter}");
     MockFormHelper.testHttpCallsCount(0);
   });
 
