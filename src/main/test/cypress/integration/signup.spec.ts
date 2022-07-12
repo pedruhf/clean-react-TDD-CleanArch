@@ -74,4 +74,11 @@ describe("SignUp", () => {
     MockFormHelper.testMainError("Este e-mail já está sendo utilizado");
     MockFormHelper.testUrl("/signup");
   });
+
+  it("Should present UnexpectedError on default error cases", () => {
+    MockHttpHelper.mockUnexpectedError();
+    simulateValidSubmit();
+    MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
+    MockFormHelper.testUrl("/signup");
+  });
 });
