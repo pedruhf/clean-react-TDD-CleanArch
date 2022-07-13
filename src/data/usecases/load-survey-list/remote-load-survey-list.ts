@@ -6,14 +6,14 @@ import { HttpGetClient, HttpStatusCode } from "@/data/protocols/http";
 export class RemoteLoadSurveyList implements LoadSurveyList {
   constructor (
     private readonly url: string,
-    private readonly httpGetClient: HttpGetClient,
+    private readonly httpGetClient: HttpGetClient<SurveyModel[]>,
   ) {}
 
-  async loadAll (): Promise<void> {
+  async loadAll (): Promise<SurveyModel[]> {
     const httpResponse = await this.httpGetClient.get({ url: this.url });
 
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: break;
+      case HttpStatusCode.ok: return httpResponse.body;
       default: throw new UnexpectedError();
     }
   }

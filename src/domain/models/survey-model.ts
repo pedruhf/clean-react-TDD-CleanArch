@@ -1,4 +1,4 @@
-export type Answer = {
+export type SurveyAnswerModel = {
   image?: string;
   answer: string;
 };
@@ -6,7 +6,7 @@ export type Answer = {
 export type SurveyModel = {
   id: string;
   question: string;
-  answers: Answer[];
-  date: string;
-  didAnswer: true;
+  answers: SurveyAnswerModel[];
+  date: Date;
+  didAnswer: boolean;
 };
