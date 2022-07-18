@@ -9,8 +9,8 @@ const mockHttpResponse = {
   data: JSON.parse(faker.datatype.json()),
   status: faker.datatype.number(),
 };
-mockedAxios.post.mockResolvedValue(mockHttpResponse);
-mockedAxios.get.mockResolvedValue(mockHttpResponse);
+mockedAxios.post.mockClear().mockResolvedValue(mockHttpResponse);
+mockedAxios.get.mockClear().mockResolvedValue(mockHttpResponse);
 
 const mockPostRequest = (): httpPostParams => ({
   url: faker.internet.url(),
@@ -63,6 +63,16 @@ describe('AxiosHttpClient', () => {
       const request = mockGetRequest();
       await sut.get(request);
       expect(mockedAxios.get).toHaveBeenCalledWith(request.url);
+    });
+
+    test('should return correct response on axios.get', async () => {
+      const sut = makeSut();
+      const httpResponse = await sut.get(mockPostRequest());
+      const axiosResponse = await mockedAxios.get.mock.results[0].value;
+      expect(httpResponse).toEqual({
+        statusCode: axiosResponse.status,
+        body: axiosResponse.data
+      });
     });
   });
 });
