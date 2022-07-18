@@ -22,31 +22,33 @@ const makeSut = (): AxiosHttpClient => {
 };
 
 describe('AxiosHttpClient', () => {
-  test('should call axios with correct values', async () => {
-    const sut = makeSut();
-    const request = mockPostRequest();
-    await sut.post(request);
-    expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body);
-  });
-
-  test('should return the correct statusCode and body on success', async () => {
-    const sut = makeSut();
-    const httpResponse = await sut.post(mockPostRequest());
-    expect(httpResponse).toEqual({
-      statusCode: mockedAxiosResult.status,
-      body: mockedAxiosResult.data
-    })
-  });
-
-  test('should return the correct statusCode and body on failure', async () => {
-    const sut = makeSut();
-    mockedAxios.post.mockRejectedValueOnce({
-      response: mockedAxiosResult,
+  describe('Post', () => {
+    test('should call axios.post with correct values', async () => {
+      const sut = makeSut();
+      const request = mockPostRequest();
+      await sut.post(request);
+      expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body);
     });
-    const postPromise = await sut.post(mockPostRequest());
-    expect(postPromise).toEqual({
-      statusCode: mockedAxiosResult.status,
-      body: mockedAxiosResult.data
-    })
+  
+    test('should return correct response on axios.post', async () => {
+      const sut = makeSut();
+      const httpResponse = await sut.post(mockPostRequest());
+      expect(httpResponse).toEqual({
+        statusCode: mockedAxiosResult.status,
+        body: mockedAxiosResult.data
+      })
+    });
+  
+    test('should return correct error on axios.post failure', async () => {
+      const sut = makeSut();
+      mockedAxios.post.mockRejectedValueOnce({
+        response: mockedAxiosResult,
+      });
+      const postPromise = await sut.post(mockPostRequest());
+      expect(postPromise).toEqual({
+        statusCode: mockedAxiosResult.status,
+        body: mockedAxiosResult.data
+      })
+    });
   });
 });
