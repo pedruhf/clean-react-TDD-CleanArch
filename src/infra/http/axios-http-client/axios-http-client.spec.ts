@@ -38,10 +38,11 @@ describe('AxiosHttpClient', () => {
     test('should return correct response on axios.post', async () => {
       const sut = makeSut();
       const httpResponse = await sut.post(mockPostRequest());
+      const axiosResponse = await mockedAxios.post.mock.results[0].value;
       expect(httpResponse).toEqual({
-        statusCode: mockHttpResponse.status,
-        body: mockHttpResponse.data
-      })
+        statusCode: axiosResponse.status,
+        body: axiosResponse.data
+      });
     });
   
     test('should return correct error on axios.post failure', async () => {
@@ -53,7 +54,7 @@ describe('AxiosHttpClient', () => {
       expect(postPromise).toEqual({
         statusCode: mockHttpResponse.status,
         body: mockHttpResponse.data
-      })
+      });
     });
   });
 
