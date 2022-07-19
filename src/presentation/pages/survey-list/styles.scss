@@ -1,8 +1,5 @@
 @import "../../styles/colors.scss";
 
-$maxContentWidth: 800px;
-$contentPadding: 3rem;
-
 .surveyListWrap {
   display: flex;
   flex-direction: column;
@@ -10,57 +7,13 @@ $contentPadding: 3rem;
   min-height: 100vh;
   background-color: $disabledBackground;
 
-  .headerWrap {
-    background-color: $primary;
-    border-top: 3rem solid $primaryDark;
-    display: flex;
-    justify-content: center;
-
-    .headerContent {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      max-width: $maxContentWidth;
-      flex-grow: 1;
-      padding: 1.5rem $contentPadding;
-
-      img {
-        width: 3.75rem;
-        align-self: center;
-      }
-    }
-
-    .logoutWrap {
-      display: flex;
-      flex-direction: column;
-      align-self: center;
-      align-items: flex-end;
-      justify-content: center;
-      color: $white;
-
-      span {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-
-      a {
-        text-decoration: none;
-        color: $white;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-
   .contentWrap {
     width: 100%;
-    padding: $contentPadding;
+    padding: 3rem;
     display: flex;
     flex-direction: column;
     align-self: center;
-    max-width: $maxContentWidth;
+    max-width: 800px;
     flex-grow: 1;
 
     h2 {
