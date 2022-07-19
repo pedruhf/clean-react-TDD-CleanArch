@@ -32,6 +32,7 @@
 
       li {
         height: 250px;
+        min-height: 250px;
         background-color: $white;
         display: flex;
         flex-direction: column;
@@ -42,6 +43,7 @@
         box-shadow: 0px 1px 3px -1px $black;
 
         .surveyContent {
+          height: 100%;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
@@ -94,6 +96,7 @@
             font-size: 1.2rem;
             margin: 1rem;
             align-self: center;
+            flex-grow: 1;
           }
         }
 
@@ -110,6 +113,20 @@
           &:hover {
             background-color: $primaryDark;
           }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .surveyListWrap { 
+    .contentWrap {
+      ul {
+        flex-direction: column;
+  
+        li {
+          flex-basis: 100%;
         }
       }
     }
