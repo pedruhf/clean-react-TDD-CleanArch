@@ -1,3 +1,4 @@
+import { SurveyList } from "@/presentation/pages";
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
@@ -12,6 +13,7 @@ const Router: React.FC<Factories> = (factories: Factories) => {
       <Switch>
         <Route path="/login" exact component={factories.makeLogin} />
         <Route path="/signup" exact component={factories.makeSignUp} />
+        <Route path="/" exact component={SurveyList} />
       </Switch>
     </BrowserRouter>
   );
