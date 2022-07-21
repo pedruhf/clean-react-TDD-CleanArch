@@ -7,7 +7,7 @@ import { mockAccount } from "@/domain/test";
 class SetStorageMock implements SetStorage {
   public key: string;
   public value: string;
-  async set (key: string, value: any): Promise<void> {
+  set (key: string, value: any): void {
     this.key = key;
     this.value = value;
   }
@@ -39,7 +39,7 @@ describe('LocalUpdateCurrentAccount usecase', () => {
 
   test('Should throw if SetStorage throws', async () => {
     const { sut, setStorageMock } = makeSut();
-    jest.spyOn(setStorageMock, "set").mockRejectedValueOnce(new Error());
+    jest.spyOn(setStorageMock, "set").mockImplementation(() => { throw new Error() });
     const promise = sut.save(mockAccount());
     await expect(promise).rejects.toThrow();
   });
