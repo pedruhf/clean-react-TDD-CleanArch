@@ -7,6 +7,7 @@ import { faker } from "@faker-js/faker";
 
 const mockAccount = (): AccountModel => ({
   accessToken: faker.datatype.uuid(),
+  name: faker.name.findName(),
 });
 
 const mockAuthentication = (): AuthenticationParams => ({

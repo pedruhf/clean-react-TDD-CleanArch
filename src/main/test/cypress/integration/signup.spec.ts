@@ -93,13 +93,13 @@ describe("SignUp", () => {
     MockFormHelper.testUrl("/signup");
   });
 
-  it("Should save accessToken if valid credentials are provided", () => {
+  it("Should save account if valid credentials are provided", () => {
     MockHttpHelper.mockOk();
     simulateValidSubmit();
     cy.getByTestId("spinner").should("not.exist");
     cy.getByTestId("main-error").should("not.exist");
     MockFormHelper.testUrl("/");
-    MockFormHelper.testLocalStorageItem("accessToken");
+    MockFormHelper.testLocalStorageItem("account");
   });
 
   it("Should prevent multiple submits", () => {

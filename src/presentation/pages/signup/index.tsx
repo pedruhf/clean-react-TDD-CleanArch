@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AddAccount, SaveAccessToken } from "@/domain/usecases";
+import { AddAccount, UpdateCurrentAccount } from "@/domain/usecases";
 import { LoginHeader, Footer, FormStatus, Input, SubmitButton } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
@@ -9,10 +9,10 @@ import styles from "./styles.scss";
 type SignUpProps = {
   validation: Validation;
   addAccount: AddAccount;
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 };
 
-const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, saveAccessToken }: SignUpProps) => {
+const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, updateCurrentAccount }: SignUpProps) => {
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
@@ -44,7 +44,7 @@ const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, saveAccessToken
         password: state.password,
         passwordConfirmation: state.passwordConfirmation,
       });
-      await saveAccessToken.save(account.accessToken);
+      await updateCurrentAccount.save(account);
       history.replace("/");
     } catch (error) {
       setState({
