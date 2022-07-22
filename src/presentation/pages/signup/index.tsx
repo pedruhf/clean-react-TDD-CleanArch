@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { AddAccount, UpdateCurrentAccount } from "@/domain/usecases";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import styles from "./styles.scss";
+
+import { AddAccount } from "@/domain/usecases";
 import { LoginHeader, Footer, FormStatus, Input, SubmitButton } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
 import FormContext from "@/presentation/contexts/form/form-context";
-import { Link, useHistory } from "react-router-dom";
-import styles from "./styles.scss";
+import { ApiContext } from "@/presentation/contexts";
 
 type SignUpProps = {
   validation: Validation;
   addAccount: AddAccount;
-  updateCurrentAccount: UpdateCurrentAccount
 };
 
-const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, updateCurrentAccount }: SignUpProps) => {
+const SignUp: React.FC<SignUpProps> = ({ validation, addAccount }: SignUpProps) => {
+  const { setCurrentAccount } = useContext(ApiContext);
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
@@ -44,7 +46,7 @@ const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, updateCurrentAc
         password: state.password,
         passwordConfirmation: state.passwordConfirmation,
       });
-      await updateCurrentAccount.save(account);
+      setCurrentAccount(account);
       history.replace("/");
     } catch (error) {
       setState({

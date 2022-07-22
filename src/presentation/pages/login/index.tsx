@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Authentication, UpdateCurrentAccount } from "@/domain/usecases";
+import React, { useState, useEffect, useContext } from "react";
+import { Authentication } from "@/domain/usecases";
 import { LoginHeader, Footer, FormStatus, Input, SubmitButton } from "@/presentation/components";
 import { Validation } from "@/presentation/protocols/validation";
-import FormContext from "@/presentation/contexts/form/form-context";
+import { FormContext, ApiContext} from "@/presentation/contexts";
 import { Link, useHistory } from "react-router-dom";
 import styles from "./styles.scss";
 
 type LoginProps = {
   validation: Validation,
   authentication: Authentication,
-  updateCurrentAccount: UpdateCurrentAccount,
 };
 
-const Login: React.FC<LoginProps> = ({ validation, authentication, updateCurrentAccount }: LoginProps) => {
+const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps) => {
+  const { setCurrentAccount } = useContext(ApiContext);
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
@@ -37,7 +37,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication, updateCurrent
         password: state.password,
       });
 
-      await updateCurrentAccount.save(account);
+      setCurrentAccount(account)
       history.replace("/");
     } catch (error) {
       setState({
