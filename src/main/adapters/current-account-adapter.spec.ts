@@ -1,3 +1,4 @@
+import { UnexpectedError } from "@/domain/errors";
 import { mockAccount } from "@/domain/test";
 import { LocalStorageAdapter } from "@/infra/cache/local-storage-adapter";
 import { setCurrentAccountAdapter as sut} from "./current-account-adapter"
@@ -10,5 +11,11 @@ describe('CurrentAccount Adapter', () => {
     const setSpy = jest.spyOn(LocalStorageAdapter.prototype, "set");
     sut(account);
     expect(setSpy).toHaveBeenCalledWith("account", account);
+  });
+
+  test('Should throw UnexpectedError if account is not provided', () => {
+    expect(() => {
+      sut(undefined);
+    }).toThrow(new UnexpectedError())
   });
 });
