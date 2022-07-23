@@ -7,4 +7,8 @@ export const setCurrentAccountAdapter = (account: AccountModel): void => {
     throw new UnexpectedError();
   }
   makeLocalStorageAdapter().set("account", account);
-}
+};
+
+export const getCurrentAccountAdapter = (): void => {
+  return makeLocalStorageAdapter().get("account");
+};
