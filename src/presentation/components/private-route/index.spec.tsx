@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import { createMemoryHistory, MemoryHistory } from "history";
 import { Router } from "react-router-dom";
 
-import PrivateRoute from "./private-route";
+import PrivateRoute from ".";
 import { mockAccount } from "@/domain/test";
 import { ApiContext } from "@/presentation/contexts";
 

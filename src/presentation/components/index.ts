@@ -7,3 +7,4 @@ export { default as Logo } from "./logo";
 export { default as Icon, IconNameOptions } from "./icon";
 export { default as Spinner } from "./spinner";
 export { default as SubmitButton } from "./submit-button";
+export { default as PrivateRoute } from "./private-route";
