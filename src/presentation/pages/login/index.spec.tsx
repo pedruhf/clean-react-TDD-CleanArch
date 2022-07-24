@@ -1,7 +1,7 @@
 import React from "react";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
-import { render, RenderResult, fireEvent, cleanup, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
 
 import { Authentication, AuthenticationParams } from "@/domain/usecases";
@@ -14,13 +14,12 @@ import { ValidationStub } from "@/presentation/test";
 import { ApiContext } from "@/presentation/contexts";
 
 const simulateValidSubmit = async (
-  sut: RenderResult,
   email = faker.internet.email(),
   password = faker.internet.password()
 ): Promise<void> => {
-  populateField(sut, "email", email);
-  populateField(sut, "password", password);
-  const form = sut.getByTestId("login-form");
+  populateField("email", email);
+  populateField("password", password);
+  const form =  screen.getByTestId("login-form");
   fireEvent.submit(form);
   await waitFor(() => form);
 };
@@ -39,7 +38,6 @@ class AuthenticationSpy implements Authentication {
 };
 
 type SutTypes = {
-  sut: RenderResult,
   authenticationSpy: AuthenticationSpy,
   setCurrentAccountMock: (account: AccountModel) => void;
 };
@@ -54,7 +52,7 @@ const makeSut = (params?: SutParams): SutTypes => {
   validationStub.errorMessage = params?.validationError;
   const authenticationSpy = new AuthenticationSpy();
   const setCurrentAccountMock = jest.fn();
-  const sut = render(
+  render(
     <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
       <Router history={history}>
         <Login
@@ -66,68 +64,65 @@ const makeSut = (params?: SutParams): SutTypes => {
   );
 
   return {
-    sut,
     authenticationSpy,
     setCurrentAccountMock,
   };
 };
 
 describe('Login Component', () => {
-  afterEach(cleanup);
-
   test('Should start with initial state', () => {
     const validationError = faker.random.words();
-    const { sut } = makeSut({ validationError });
-    testChildCount(sut, "error-wrap", 0);
-    testButtonIsDisable(sut, "submit-button", true);
-    testStatusForField(sut, "email", validationError);
-    testStatusForField(sut, "password", validationError);
+    makeSut({ validationError });
+    testChildCount("error-wrap", 0);
+    testButtonIsDisable("submit-button", true);
+    testStatusForField("email", validationError);
+    testStatusForField("password", validationError);
   });
   
   test('Should show email error if Validation fails', () => {
     const validationError = faker.random.words();
-    const { sut, } = makeSut({ validationError });
-    populateField(sut, "email");
-    testStatusForField(sut, "email", validationError);
+    makeSut({ validationError });
+    populateField("email");
+    testStatusForField("email", validationError);
   });
 
   test('Should show password error if Validation fails', () => {
     const validationError = faker.random.words();
-    const { sut, } = makeSut({ validationError });
-    populateField(sut, "password");
-    testStatusForField(sut, "password", validationError);
+    const { } = makeSut({ validationError });
+    populateField("password");
+    testStatusForField("password", validationError);
   });
 
   test('Should show valid email state if Validation succeeds', () => {
-    const { sut } = makeSut();
-    populateField(sut, "email");
-    testStatusForField(sut, "email")
+    makeSut();
+    populateField("email");
+    testStatusForField("email")
   });
 
   test('Should show valid password state if Validation succeeds', () => {
-    const { sut } = makeSut();
-    populateField(sut, "password");
-    testStatusForField(sut, "password");
+    makeSut();
+    populateField("password");
+    testStatusForField("password");
   });
 
   test('Should enable submit button if form is valid', () => {
-    const { sut } = makeSut();
-    populateField(sut, "email");
-    populateField(sut, "password");
-    testButtonIsDisable(sut, "submit-button", false);
+    makeSut();
+    populateField("email");
+    populateField("password");
+    testButtonIsDisable("submit-button", false);
   });
 
   test('Should show spinner on submit', async () => {
-    const { sut } = makeSut();
-    await simulateValidSubmit(sut);
-    testElementExists(sut, "spinner")
+    makeSut();
+    await simulateValidSubmit();
+    testElementExists("spinner")
   });
 
   test('Should call Authentication with correct values', async () => {
-    const { sut, authenticationSpy } = makeSut();
+    const { authenticationSpy } = makeSut();
     const email = faker.internet.email();
     const password = faker.internet.password();
-    await simulateValidSubmit(sut, email, password);
+    await simulateValidSubmit(email, password);
     expect(authenticationSpy.params).toEqual({
       email,
       password,
@@ -135,38 +130,38 @@ describe('Login Component', () => {
   });
 
   test('Should call Authentication only once', async() => {
-    const { sut, authenticationSpy } = makeSut();
-    await simulateValidSubmit(sut);
-    await simulateValidSubmit(sut);
+    const { authenticationSpy } = makeSut();
+    await simulateValidSubmit();
+    await simulateValidSubmit();
     expect(authenticationSpy.callsCount).toBe(1);
   });
 
   test('Should not call Authentication if form is invalid', async () => {
     const validationError = faker.random.words();
-    const { sut, authenticationSpy } = makeSut({ validationError });
-    await simulateValidSubmit(sut);
+    const { authenticationSpy } = makeSut({ validationError });
+    await simulateValidSubmit();
     expect(authenticationSpy.callsCount).toBe(0);
   });
 
   test('Should present error if Authentication fails', async () => {
-    const { sut, authenticationSpy } = makeSut();
+    const { authenticationSpy } = makeSut();
     const error = new InvalidCredentialsError();
     jest.spyOn(authenticationSpy, "auth").mockReturnValueOnce(Promise.reject(error));
-    await simulateValidSubmit(sut);
-    testChildCount(sut, "error-wrap", 1);
+    await simulateValidSubmit();
+    testChildCount("error-wrap", 1);
   });
 
   test('Should call SaveAccessToken on success', async () => {
-    const { sut, authenticationSpy, setCurrentAccountMock } = makeSut();
-    await simulateValidSubmit(sut);
+    const { authenticationSpy, setCurrentAccountMock } = makeSut();
+    await simulateValidSubmit();
     expect(setCurrentAccountMock).toHaveBeenCalledWith(authenticationSpy.account);
     expect(history.length).toBe(1);
     expect(history.location.pathname).toBe("/");
   });
 
   test('Should go to signup page', async () => {
-    const { sut } = makeSut();
-    const createAccountLink  = sut.getByTestId("create-account-link");
+    makeSut();
+    const createAccountLink  = screen.getByTestId("create-account-link");
     fireEvent.click(createAccountLink);
     expect(history.length).toBe(2);
     expect(history.location.pathname).toBe("/signup");
