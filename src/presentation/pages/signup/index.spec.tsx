@@ -8,9 +8,6 @@ import SignUp from "./index";
 import { ValidationStub } from "@/presentation/test";
 import {
   populateField,
-  testButtonIsDisable,
-  testChildCount,
-  testElementExists,
   testStatusForField
 } from "@/presentation/test/form-helper";
 import { AddAccount, AddAccountParams } from "@/domain/usecases";
@@ -77,8 +74,8 @@ describe('SignUp Component', () => {
   test('Should start with initial state', () => {
     const validationError = "Campo obrigatório"
     makeSut({ validationError });
-    testChildCount("error-wrap", 0);
-    testButtonIsDisable("submit-button", true);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(0);
+    expect(screen.getByTestId("submit-button")).toBeDisabled();
     testStatusForField("name", validationError);
     testStatusForField("email", validationError);
     testStatusForField("password", validationError);
@@ -140,13 +137,13 @@ describe('SignUp Component', () => {
   test('Should enable submit button if form is valid', () => {
     makeSut();
     simulateValidSubmit();
-    testButtonIsDisable("submit-button", false);
+    expect(screen.getByTestId("submit-button")).toBeEnabled();
   });
 
   test('Should show spinner on submit form', () => {
     makeSut();
     simulateValidSubmit();
-    testElementExists("spinner")
+    expect(screen.queryByTestId("spinner")).toBeInTheDocument();
   });
 
   test('Should call AddAccount with correct values', () => {
@@ -180,8 +177,7 @@ describe('SignUp Component', () => {
     const error = new EmailInUseError();
     jest.spyOn(addAccountSpy, "add").mockRejectedValueOnce(error);
     await simulateValidSubmit();
-    // testElementText("main-error", error.message);
-    testChildCount("error-wrap", 1);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(1);
   });
 
   test('Should call SaveAccessToken on success', async () => {

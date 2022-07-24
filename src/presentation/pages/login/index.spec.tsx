@@ -9,7 +9,7 @@ import { AccountModel } from "@/domain/models";
 import { InvalidCredentialsError } from "@/domain/errors";
 import { mockAccount } from "@/domain/test";
 import { Login } from "@/presentation/pages";
-import { populateField, testButtonIsDisable, testChildCount, testElementExists, testStatusForField } from "@/presentation/test/form-helper";
+import { populateField, testStatusForField } from "@/presentation/test/form-helper";
 import { ValidationStub } from "@/presentation/test";
 import { ApiContext } from "@/presentation/contexts";
 
@@ -73,8 +73,8 @@ describe('Login Component', () => {
   test('Should start with initial state', () => {
     const validationError = faker.random.words();
     makeSut({ validationError });
-    testChildCount("error-wrap", 0);
-    testButtonIsDisable("submit-button", true);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(0);
+    expect(screen.getByTestId("submit-button")).toBeDisabled();
     testStatusForField("email", validationError);
     testStatusForField("password", validationError);
   });
@@ -109,13 +109,13 @@ describe('Login Component', () => {
     makeSut();
     populateField("email");
     populateField("password");
-    testButtonIsDisable("submit-button", false);
+    expect(screen.getByTestId("submit-button")).toBeEnabled();
   });
 
   test('Should show spinner on submit', async () => {
     makeSut();
     await simulateValidSubmit();
-    testElementExists("spinner")
+    expect(screen.queryByTestId("spinner")).toBeInTheDocument();
   });
 
   test('Should call Authentication with correct values', async () => {
@@ -148,7 +148,7 @@ describe('Login Component', () => {
     const error = new InvalidCredentialsError();
     jest.spyOn(authenticationSpy, "auth").mockReturnValueOnce(Promise.reject(error));
     await simulateValidSubmit();
-    testChildCount("error-wrap", 1);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(1);
   });
 
   test('Should call SaveAccessToken on success', async () => {
