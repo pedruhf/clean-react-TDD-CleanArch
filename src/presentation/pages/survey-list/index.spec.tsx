@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { SurveyList } from "@/presentation/pages";
 import { LoadSurveyList } from "@/domain/usecases";
@@ -66,5 +66,19 @@ describe('SurveyList Component', () => {
       expect(screen.queryByTestId("survey-list")).not.toBeInTheDocument();
     });
     expect(screen.getByTestId("error")).toHaveTextContent(error.message);
+  });
+
+  test('Should call LoadSurveyList on click in reload button', async () => {
+    const loadSurveyListSpy = new LoadSurveyListSpy();
+    jest.spyOn(loadSurveyListSpy, "loadAll").mockRejectedValueOnce(new UnexpectedError());
+    makeSut(loadSurveyListSpy);
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-list")).not.toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByTestId("reload-button"));
+    expect(loadSurveyListSpy.callsCount).toBe(1);
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-list")).toBeInTheDocument();
+    });
   });
 });
