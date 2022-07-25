@@ -1,7 +1,5 @@
 import React, { useContext, useRef } from "react";
-import { GoPrimitiveDot } from "react-icons/go";
 import Context from "@/presentation/contexts/form/form-context";
-import { colors } from "@/presentation/styles/colors";
 import styles from "./styles.scss";
 
 type InputProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
