@@ -19,6 +19,7 @@ const mockPostRequest = (): httpPostParams => ({
 
 const mockGetRequest = (): HttpGetParams => ({
   url: faker.internet.url(),
+  headers: JSON.parse(faker.datatype.json()),
 });
 
 const makeSut = (): AxiosHttpClient => {
@@ -63,7 +64,10 @@ describe('AxiosHttpClient', () => {
       const sut = makeSut();
       const request = mockGetRequest();
       await sut.get(request);
-      expect(mockedAxios.get).toHaveBeenCalledWith(request.url);
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        request.url,
+        { headers: request.headers },
+      );
     });
 
     test('should return correct response on axios.get', async () => {
