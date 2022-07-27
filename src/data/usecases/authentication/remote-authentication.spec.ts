@@ -1,16 +1,12 @@
-import { AccountModel } from "@/domain/models/account-model";
-import { AuthenticationParams } from "@/domain/usecases";
-import { UnexpectedError, InvalidCredentialsError } from "@/domain/errors";
-import { HttpResponse, HttpStatusCode, HttpPostClient, httpPostParams } from "@/data/protocols/http";
-import { RemoteAuthentication } from "./remote-authentication";
 import { faker } from "@faker-js/faker";
 
-const mockAccount = (): AccountModel => ({
-  accessToken: faker.datatype.uuid(),
-  name: faker.name.findName(),
-});
+import { RemoteAuthentication } from "./remote-authentication";
+import { UnexpectedError, InvalidCredentialsError } from "@/domain/errors";
+import { HttpResponse, HttpStatusCode, HttpPostClient, httpPostParams } from "@/data/protocols/http";
+import { Authentication } from "@/domain/usecases";
+import { mockAccount } from "@/domain/test";
 
-const mockAuthentication = (): AuthenticationParams => ({
+const mockAuthentication = (): Authentication.Params => ({
   email: faker.internet.email(),
   password: faker.internet.password(),
 });
@@ -31,11 +27,11 @@ class HttpPostClientSpy<R> implements HttpPostClient<R> {
 
 type SutTypes = {
   sut: RemoteAuthentication;
-  httpPostClientStub: HttpPostClientSpy<AccountModel>;
+  httpPostClientStub: HttpPostClientSpy<RemoteAuthentication.Model>;
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientStub = new HttpPostClientSpy<AccountModel>(); 
+  const httpPostClientStub = new HttpPostClientSpy<RemoteAuthentication.Model>(); 
   const sut = new RemoteAuthentication(url, httpPostClientStub);
 
   return {
@@ -95,7 +91,7 @@ describe('RemoteAuthentication Usecase', () => {
     expect(promise).rejects.toThrow(new UnexpectedError())
   });
 
-  test('should return an AccountModel if HttpPostClient returns 200', async () => {
+  test('should return an Authentication.Model if HttpPostClient returns 200', async () => {
     const { sut, httpPostClientStub } = makeSut();
     const httpResult = mockAccount();
     httpPostClientStub.response = {

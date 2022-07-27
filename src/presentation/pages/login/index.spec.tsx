@@ -4,11 +4,11 @@ import { Router } from "react-router-dom";
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import { faker } from "@faker-js/faker";
 
-import { Authentication, AuthenticationParams } from "@/domain/usecases";
+import { Login } from "@/presentation/pages";
+import { Authentication } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
 import { InvalidCredentialsError } from "@/domain/errors";
 import { mockAccount } from "@/domain/test";
-import { Login } from "@/presentation/pages";
 import { populateField, testStatusForField } from "@/presentation/test/form-helper";
 import { ValidationStub } from "@/presentation/test";
 import { ApiContext } from "@/presentation/contexts";
@@ -28,9 +28,9 @@ const simulateValidSubmit = async (
 class AuthenticationSpy implements Authentication {
   account = mockAccount();
   callsCount = 0;
-  params: AuthenticationParams;
+  params: Authentication.Params;
 
-  auth(params: AuthenticationParams): Promise<AccountModel> {
+  auth(params: Authentication.Params): Promise<Authentication.Model> {
     this.callsCount++;
     this.params = params;
     return Promise.resolve(this.account);
@@ -39,7 +39,7 @@ class AuthenticationSpy implements Authentication {
 
 type SutTypes = {
   authenticationSpy: AuthenticationSpy,
-  setCurrentAccountMock: (account: AccountModel) => void;
+  setCurrentAccountMock: (account: Authentication.Model) => void;
 };
 
 type SutParams = {

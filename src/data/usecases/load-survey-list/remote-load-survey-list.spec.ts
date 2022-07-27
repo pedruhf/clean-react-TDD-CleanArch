@@ -1,18 +1,18 @@
-import { SurveyModel } from "@/domain/models";
+import { faker } from "@faker-js/faker";
+
+import { RemoteLoadSurveyList } from "./remote-load-survey-list";
 import { UnexpectedError } from "@/domain/errors";
 import { HttpStatusCode } from "@/data/protocols/http";
 import { HttpGetClientSpy } from "@/data/test";
-import { faker } from "@faker-js/faker";
-import { RemoteLoadSurveyList } from "./remote-load-survey-list";
 import { mockSurveyList } from "@/domain/test";
 
 type SutTypes = {
   sut: RemoteLoadSurveyList;
-  httpGetClientSpy: HttpGetClientSpy<SurveyModel[]>;
+  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyList.Model[]>;
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpGetClientSpy = new HttpGetClientSpy<SurveyModel[]>();
+  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyList.Model[]>();
   const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
   
   return {
@@ -56,7 +56,7 @@ describe('RemoteLoadSurveyList Usecase', () => {
     await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  test('Should return a list of SurveyModel if HttpGetClient returns 200', async () => {
+  test('Should return a list of LoadSurveyList.Model if HttpGetClient returns 200', async () => {
     const { sut, httpGetClientSpy } = makeSut();
     const httpResult = mockSurveyList();
     httpGetClientSpy.response = {

@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { SurveyItem } from "@/presentation/pages/survey-list/components";
 import { mockSurvey } from "@/domain/test";
 import { IconNameOptions } from "@/presentation/components";
-import { SurveyModel } from "@/domain/models";
+import { LoadSurveyList } from "@/domain/usecases";
 
 const makeSut = (survey = mockSurvey()): void => {
   render(<SurveyItem survey={survey} />);
@@ -12,7 +12,7 @@ const makeSut = (survey = mockSurvey()): void => {
 
 describe('SurveyItem Component', () => {
   test('Should render with correct values', () => {
-    const survey: SurveyModel = Object.assign(mockSurvey(), {
+    const survey: LoadSurveyList.Model = Object.assign(mockSurvey(), {
       didAnswer: false,
       date: new Date("2022-07-24T00:00:00"),
     });
@@ -25,7 +25,7 @@ describe('SurveyItem Component', () => {
   });
 
   test('Should render with correct values', () => {
-    const survey: SurveyModel = Object.assign(mockSurvey(), {
+    const survey: LoadSurveyList.Model = Object.assign(mockSurvey(), {
       didAnswer: true,
       date: new Date("2019-05-03T00:00:00"),
     });

@@ -10,7 +10,7 @@ import {
   populateField,
   testStatusForField
 } from "@/presentation/test/form-helper";
-import { AddAccount, AddAccountParams } from "@/domain/usecases";
+import { AddAccount } from "@/domain/usecases";
 import { AccountModel } from "@/domain/models";
 import { EmailInUseError } from "@/domain/errors";
 import { mockAccount } from "@/domain/test";
@@ -27,11 +27,11 @@ const simulateValidSubmit = async (name = faker.name.findName(), email = faker.i
 };
 
 class AddAccountSpy implements AddAccount {
-  public params: AddAccountParams;
+  public params: AddAccount.Params;
   public callsCount: number = 0;
   public account = mockAccount();
 
-  async add(params: AddAccountParams): Promise<AccountModel> {
+  async add(params: AddAccount.Params): Promise<AccountModel> {
     this.params = params;
     this.callsCount++;
     return this.account;
@@ -40,7 +40,7 @@ class AddAccountSpy implements AddAccount {
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy;
-  setCurrentAccountMock: (account: AccountModel) => void;
+  setCurrentAccountMock: (account: AddAccount.Model) => void;
 };
 
 type SutParams = {

@@ -1,19 +1,9 @@
-import { AccountModel } from "@/domain/models";
-import { AddAccountParams } from "@/domain/usecases";
-import { EmailInUseError, UnexpectedError } from "@/domain/errors";
-import { HttpPostClient, httpPostParams, HttpResponse, HttpStatusCode } from "@/data/protocols/http";
-import { RemoteAddAccount } from "./remote-add-account";
 import { faker } from "@faker-js/faker";
 
-const mockAddAccountParams = (): AddAccountParams => {
-  const password = faker.internet.password();
-  return {
-    name: faker.name.findName(),
-    email: faker.internet.email(),
-    password,
-    passwordConfirmation: password,
-  };
-};
+import { RemoteAddAccount } from "./remote-add-account";
+import { EmailInUseError, UnexpectedError } from "@/domain/errors";
+import { HttpPostClient, httpPostParams, HttpResponse, HttpStatusCode } from "@/data/protocols/http";
+import { mockAddAccountParams } from "@/domain/test";
 
 class HttpPostClientSpy<R> implements HttpPostClient<R> {
   url?: string;
@@ -30,11 +20,11 @@ class HttpPostClientSpy<R> implements HttpPostClient<R> {
 
 type SutTypes = {
   sut: RemoteAddAccount;
-  httpPostClientSpy: HttpPostClientSpy<AccountModel>
+  httpPostClientSpy: HttpPostClientSpy<RemoteAddAccount.Model>
 };
 
 const makeSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientSpy = new HttpPostClientSpy<AccountModel>()
+  const httpPostClientSpy = new HttpPostClientSpy<RemoteAddAccount.Model>()
   const sut = new RemoteAddAccount(url, httpPostClientSpy);
 
   return {
@@ -95,7 +85,7 @@ describe('RemoteAddAccount usecase', () => {
     await expect(addPromise).rejects.toThrow(new UnexpectedError())
   });
 
-  test('Should return an AccountModel if HttpPostClient on success', async () => {
+  test('Should return an AddAccount.Model if HttpPostClient on success', async () => {
     const { sut, httpPostClientSpy } = makeSut();
     const accountModel = await sut.add(mockAddAccountParams());
     expect(accountModel).toEqual(httpPostClientSpy.response.body);
