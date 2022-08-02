@@ -19,6 +19,13 @@ describe('LocalStorage Adapter', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith(key, JSON.stringify(value));
   });
 
+  test('Should call localStorage.removeItem if value is falsy', () => {
+    const sut = makeSut();
+    const key = faker.database.column();
+    sut.set(key, undefined);
+    expect(localStorage.removeItem).toHaveBeenCalledWith(key);
+  });
+
   test('Should call localStorage.getItem with correct key', () => {
     const sut = makeSut();
     const key = faker.database.column();
