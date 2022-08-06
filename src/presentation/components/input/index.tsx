@@ -14,10 +14,10 @@ const Input: React.FC<InputProps> = (props: InputProps) => {
   };
 
   const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       [event.target.name]: event.target.value
-    })
+    }))
   };
 
   return (

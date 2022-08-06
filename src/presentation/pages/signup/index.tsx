@@ -37,10 +37,10 @@ const SignUp: React.FC<SignUpProps> = ({ validation, addAccount }: SignUpProps) 
       if (state.isLoading || state.isFormInvalid) {
         return;
       }
-      setState({
-        ...state,
+      setState(prevState => ({
+        ...prevState,
         isLoading: true,
-      });
+      }));
       const account = await addAccount.add({
         name: state.name,
         email: state.email,
@@ -50,11 +50,11 @@ const SignUp: React.FC<SignUpProps> = ({ validation, addAccount }: SignUpProps) 
       setCurrentAccount(account);
       history.replace("/");
     } catch (error) {
-      setState({
-        ...state,
+      setState(prevState => ({
+        ...prevState,
         isLoading: false,
         mainError: error.message
-      });
+      }));
     }
   };
 
@@ -65,14 +65,14 @@ const SignUp: React.FC<SignUpProps> = ({ validation, addAccount }: SignUpProps) 
     const emailError = validation.validate("email", formData);
     const passwordError = validation.validate("password", formData);
     const passwordConfirmationError = validation.validate("passwordConfirmation", formData);
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       nameError,
       emailError,
       passwordError,
       passwordConfirmationError,
       isFormInvalid: !!nameError || !!emailError  || !!passwordError || !!passwordConfirmationError,
-    });
+    }));
   }, [state.name, state.email, state.password, state.passwordConfirmation]);
 
   return (

@@ -33,7 +33,7 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
         return;
       }
   
-      setState({ ...state, isLoading: true });
+      setState(prevState => ({ ...prevState, isLoading: true }));
       const account = await authentication.auth({
         email: state.email,
         password: state.password,
@@ -42,11 +42,11 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
       setCurrentAccount(account)
       history.replace("/");
     } catch (error) {
-      setState({
-        ...state,
+      setState(prevState => ({
+        ...prevState,
         isLoading: false,
         mainError: error.message
-      });
+      }));
     }
   };
 
@@ -55,12 +55,12 @@ const Login: React.FC<LoginProps> = ({ validation, authentication }: LoginProps)
     const formData = { email, password };
     const emailError = validation.validate("email", formData);
     const passwordError = validation.validate("password", formData);
-    setState({
-      ...state,
+    setState(prevState => ({
+      ...prevState,
       emailError,
       passwordError,
       isFormInvalid: !!emailError || !!passwordError,
-    });
+    }));
   }, [state.email, state.password]);
 
   return (
