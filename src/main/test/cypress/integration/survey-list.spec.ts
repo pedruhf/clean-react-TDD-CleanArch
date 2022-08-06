@@ -28,4 +28,11 @@ describe("SurveyList", () => {
     const { name } = MockHelper.getLocalStorageItem("account");
     cy.getByTestId("username").should("contain.text", name);
   });
+
+  it("Should logout on logout link click", () => {
+    MockHttpHelper.mockUnexpectedError();
+    cy.visit("");
+    cy.getByTestId("logout").click();
+    MockHelper.testUrl("/login");
+  });
 });
