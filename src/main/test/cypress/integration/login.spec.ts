@@ -1,4 +1,5 @@
-import * as MockFormHelper from "../support/form-helper"
+import * as MockFormHelper from "../support/form-helpers";
+import * as MockHelper from "../support/helpers";
 import * as MockHttpHelper from "../support/login-mocks";
 import { faker } from "@faker-js/faker";
 
@@ -55,34 +56,27 @@ describe("Login", () => {
     MockHttpHelper.mockInvalidCredentialsError();
     simulateValidSubmit();
     MockFormHelper.testMainError("Credenciais inválidas");
-    MockFormHelper.testUrl("/login");
+    MockHelper.testUrl("/login");
   });
 
   it("Should present UnexpectedError on default error cases", () => {
     MockHttpHelper.mockUnexpectedError();
     simulateValidSubmit();
     MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
-    MockFormHelper.testUrl("/login");
-  });
-
-  it("Should present UnexpectedError if invalid data is returned", () => {
-    MockHttpHelper.mockInvalidData();
-    simulateValidSubmit();
-    MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
-    MockFormHelper.testUrl("/login");
+    MockHelper.testUrl("/login");
   });
 
   it("Should prevent multiple submits", () => {
     MockHttpHelper.mockOk();
     populateFields();
     cy.getByTestId("submit-button").dblclick();
-    MockFormHelper.testHttpCallsCount(1);
+    MockHelper.testHttpCallsCount(1);
   });
 
   it("Should not call submits if form is invalid", () => {
     MockHttpHelper.mockOk();
     cy.getByTestId("email").focus().type(faker.internet.email()).type("{enter}");
-    MockFormHelper.testHttpCallsCount(0);
+    MockHelper.testHttpCallsCount(0);
   });
 
   it("Should save account if valid credentials are provided", () => {
@@ -90,7 +84,7 @@ describe("Login", () => {
     simulateValidSubmit();
     cy.getByTestId("spinner").should("not.exist");
     cy.getByTestId("main-error").should("not.exist");
-    MockFormHelper.testUrl("/");
-    MockFormHelper.testLocalStorageItem("account");
+    MockHelper.testUrl("/");
+    MockHelper.testLocalStorageItem("account");
   });
 });
