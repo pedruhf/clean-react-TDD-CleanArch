@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - 12
+script:
+  - npm run test:coveralls
+build:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  app: nome-do-projeto-no-heroku
+  skip_cleanup: true
