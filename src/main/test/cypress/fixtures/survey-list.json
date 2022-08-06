@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "question": "Question 1",
+    "date": "2022-08-06T00:00:00",
+    "didAnswer": true
+  },
+  {
+    "id": 2,
+    "question": "Question 2",
+    "date": "2022-02-02T03:02:10",
+    "didAnswer": false
+  }
+]

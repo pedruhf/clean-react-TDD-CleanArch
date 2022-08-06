@@ -5,15 +5,15 @@ import { faker } from "@faker-js/faker";
 
 const path = /login/
 
-export const mockInvalidCredentialsError = (): void => {
+const mockInvalidCredentialsError = (): void => {
   MockHttpHelper.mockUnauthorizedError(path);
 };
 
-export const mockUnexpectedError = (): void => {
+const mockUnexpectedError = (): void => {
   MockHttpHelper.mockServerError(path, "POST");
 };
 
-export const mockSuccess = (): void => {
+const mockSuccess = (): void => {
   MockHttpHelper.mockOk(path, "POST", "fx:account");
 };
 
