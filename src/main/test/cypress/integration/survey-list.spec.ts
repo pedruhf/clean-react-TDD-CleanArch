@@ -15,4 +15,10 @@ describe("SurveyList", () => {
     cy.visit("");
     cy.getByTestId("error").should("contain.text", "Erro inesperado. Tente novamente em instantes")
   });
+
+  it("Should logout on AccessDeniedError", () => {
+    MockHttpHelper.mockAccessDeniedError();
+    cy.visit("");
+    MockHelper.testUrl("/login");
+  });
 });
