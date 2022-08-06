@@ -1,13 +1,26 @@
-import * as MockFormHelper from "../support/form-helpers";
-import * as MockHelper from "../support/helpers";
-import * as MockHttpHelper from "../support/login-mocks";
+import * as MockFormHelper from "../utils/form-helpers";
+import * as MockHelper from "../utils/helpers";
+import * as MockHttpHelper from "../utils/http-mocks";
 import { faker } from "@faker-js/faker";
+
+const path = /login/
+
+export const mockInvalidCredentialsError = (): void => {
+  MockHttpHelper.mockUnauthorizedError(path);
+};
+
+export const mockUnexpectedError = (): void => {
+  MockHttpHelper.mockServerError(path, "POST");
+};
+
+export const mockSuccess = (): void => {
+  MockHttpHelper.mockOk(path, "POST", "fx:account");
+};
 
 const populateFields = (): void => {
   cy.getByTestId("email").focus().type(faker.internet.email());
   cy.getByTestId("password").focus().type(faker.random.alphaNumeric(5));
 };
-
 
 const simulateValidSubmit = (): void => {
   populateFields();
@@ -53,34 +66,34 @@ describe("Login", () => {
   });
 
   it("Should present InvalidCredentialsError on 401", () => {
-    MockHttpHelper.mockInvalidCredentialsError();
+    mockInvalidCredentialsError();
     simulateValidSubmit();
     MockFormHelper.testMainError("Credenciais inválidas");
     MockHelper.testUrl("/login");
   });
 
   it("Should present UnexpectedError on default error cases", () => {
-    MockHttpHelper.mockUnexpectedError();
+    mockUnexpectedError();
     simulateValidSubmit();
     MockFormHelper.testMainError("Erro inesperado. Tente novamente em instantes");
     MockHelper.testUrl("/login");
   });
 
   it("Should prevent multiple submits", () => {
-    MockHttpHelper.mockOk();
+    mockSuccess();
     populateFields();
     cy.getByTestId("submit-button").dblclick();
     MockHelper.testHttpCallsCount(1);
   });
 
   it("Should not call submits if form is invalid", () => {
-    MockHttpHelper.mockOk();
+    mockSuccess();
     cy.getByTestId("email").focus().type(faker.internet.email()).type("{enter}");
     MockHelper.testHttpCallsCount(0);
   });
 
   it("Should save account if valid credentials are provided", () => {
-    MockHttpHelper.mockOk();
+    mockSuccess();
     simulateValidSubmit();
     cy.getByTestId("spinner").should("not.exist");
     cy.getByTestId("main-error").should("not.exist");
