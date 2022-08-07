@@ -45,4 +45,13 @@ describe('RemoteLoadSurveyResult Usecase', () => {
     const loadPromise = sut.load();
     await expect(loadPromise).rejects.toThrow(new UnexpectedError());
   });
+
+  test('Should throws UnexpectedError if HttpGetClient returns 500', async () => {
+    const { sut, httpGetClientSpy } = makeSut();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.serverError,
+    };
+    const loadPromise = sut.load();
+    await expect(loadPromise).rejects.toThrow(new UnexpectedError());
+  });
 });
