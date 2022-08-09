@@ -9,4 +9,5 @@ export { default as Spinner } from "./spinner";
 export { default as Loading } from "./loading";
 export { default as SubmitButton } from "./submit-button";
 export { default as Calendar } from "./calendar";
+export { default as Error } from "./error";
 export { default as PrivateRoute } from "./private-route";
