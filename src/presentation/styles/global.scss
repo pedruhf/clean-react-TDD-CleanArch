@@ -27,6 +27,7 @@ button {
   line-height: 3.2rem;
   cursor: pointer;
   padding: 0 1rem;
+  outline: none;
 
   &:hover {
     filter: brightness(0.9);

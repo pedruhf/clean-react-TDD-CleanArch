@@ -12,15 +12,23 @@
   transform-origin: 40px 40px;
 }
 
-.spinner div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: $primary;
-  margin: -4px 0 0 -4px;
+.spinner {
+  div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: $primary;
+    margin: -4px 0 0 -4px;
+  }
+
+  &.negative {
+    div:after {
+      background: $white;
+    }
+  }
 }
 
 .spinner div:nth-child(1) {
