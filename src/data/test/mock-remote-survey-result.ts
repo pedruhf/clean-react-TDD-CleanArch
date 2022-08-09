@@ -11,12 +11,14 @@ export const mockRemoveSurveyResult = (): RemoteLoadSurveyResult.Model => ({
       answer: faker.random.words(10),
       count: faker.datatype.number(),
       percent: faker.datatype.number(100),
+      isCurrentAccountAnswer: faker.datatype.boolean(),
     },
     {
       image: faker.internet.url(),
       answer: faker.random.words(10),
       count: faker.datatype.number(),
       percent: faker.datatype.number(100),
+      isCurrentAccountAnswer: faker.datatype.boolean(),
     },
-  ]
+  ],
 });
