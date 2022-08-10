@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Footer, Header } from "@/presentation/components";
-import { SurveyContext, SurveyListItem } from "@/presentation/pages/survey-list/components";
+import { SurveyListItem } from "@/presentation/pages/survey-list/components";
 import { Error } from "@/presentation/components";
 import { LoadSurveyList } from "@/domain/usecases";
 import { useErrorHandler } from "@/presentation/hooks";
@@ -40,9 +40,10 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }: SurveyListPro
 
       <div className={styles.contentWrap}>
         <h2>Enquetes</h2>
-        <SurveyContext.Provider value={{ state, setState }}>
-          { state.error ? <Error error={state.error} reload={reload} /> : <SurveyListItem /> }
-        </SurveyContext.Provider>
+        { state.error
+          ? <Error error={state.error} reload={reload} />
+          : <SurveyListItem surveys={state.surveys} />
+        }
       </div>
 
       <Footer />
