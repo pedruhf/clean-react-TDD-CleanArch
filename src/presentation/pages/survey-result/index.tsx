@@ -11,31 +11,26 @@ const SurveyResult: React.FC = () => {
       <Header />
 
       <div className={styles.contentWrap}>
-        <hgroup>
-          <Calendar date={new Date()} className={styles.calendarWrap} />
-          <h2>Qual eh seu framework web favorito?</h2>
-        </hgroup>
-        <ul className={styles.answersList}>
-          <li>
-            <img src="http://fordevs.herokuapp.com/static/img/logo-react.png" />
-            <span className={styles.answer}>ReactJS</span>
-            <span className={styles.percent}>50%</span>
-          </li>
-          <li className={styles.active}>
-            <img src="http://fordevs.herokuapp.com/static/img/logo-react.png" />
-            <span className={styles.answer}>ReactJS</span>
-            <span className={styles.percent}>50%</span>
-          </li>
-          <li>
-            <img src="http://fordevs.herokuapp.com/static/img/logo-react.png" />
-            <span className={styles.answer}>ReactJS</span>
-            <span className={styles.percent}>50%</span>
-          </li>
-        </ul>
-        <button>Voltar</button>
-        {/* <Loading /> */}
+        {
+          false && 
+            <>
+              <hgroup>
+                <Calendar date={new Date()} className={styles.calendarWrap} />
+                <h2>Qual eh seu framework web favorito?</h2>
+              </hgroup>
+              <ul className={styles.answersList}>
+                <li>
+                  <img src="http://fordevs.herokuapp.com/static/img/logo-react.png" />
+                  <span className={styles.answer}>ReactJS</span>
+                  <span className={styles.percent}>50%</span>
+                </li>
+              </ul>
+              <button>Voltar</button>
+            </>
+        }
+        { false && <Loading />}
       </div>
-
+      
       <Footer />
     </div>
   )
