@@ -26,7 +26,7 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }: SurveyListPro
       error: "",
       reloadSurveys: !prevState.reloadSurveys,
     }));
-  }
+  };
 
   useEffect(() => {
     loadSurveyList.loadAll()
