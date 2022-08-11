@@ -11,7 +11,7 @@ type SurveyResultProps = {
 };
 
 const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult }: SurveyResultProps) => {
-  const [state] = useState({
+  const [state, setState] = useState({
     isLoading: false,
     error: "",
     surveyResult: null as LoadSurveyResult.Model
@@ -19,7 +19,7 @@ const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult }: SurveyR
   
   useEffect(() => {
     loadSurveyResult.load()
-      .then()
+      .then(surveyResult => setState(prevState => ({ ...prevState, surveyResult })))
       .catch();
   }, []);
 
@@ -32,15 +32,18 @@ const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult }: SurveyR
           state.surveyResult && 
             <>
               <hgroup>
-                <Calendar date={new Date()} className={styles.calendarWrap} />
-                <h2>Qual eh seu framework web favorito?</h2>
+                <Calendar date={state.surveyResult.date} className={styles.calendarWrap} />
+                <h2 data-testid="question">{state.surveyResult.question}</h2>
               </hgroup>
-              <ul className={styles.answersList}>
-                <li>
-                  <img src="http://fordevs.herokuapp.com/static/img/logo-react.png" />
-                  <span className={styles.answer}>ReactJS</span>
-                  <span className={styles.percent}>50%</span>
-                </li>
+              <ul data-testid="answers" className={styles.answersList}>
+                {state.surveyResult.answers.map(answer =>
+                  <li data-testid="answer-wrap" key={answer.answer} className={answer.isCurrentAccountAnswer && styles.active}>
+                    {answer.image && <img data-testid="image" src={answer.image} alt={answer.answer} />}
+                    <span data-testid="answer" className={styles.answer}>{answer.answer}</span>
+                    <span data-testid="percent" className={styles.percent}>{answer.percent}%</span>
+                  </li>
+                )}
+                
               </ul>
               <button>Voltar</button>
             </>
