@@ -1,24 +1,35 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
+import { createMemoryHistory, MemoryHistory } from "history";
 
 import { SurveyResult } from "@/presentation/pages";
 import { ApiContext } from "@/presentation/contexts";
 import { LoadSurveyResultSpy, mockAccount, mockSurveyResult } from "@/domain/test";
-import { UnexpectedError } from "@/domain/errors";
+import { AccessDeniedError, UnexpectedError } from "@/domain/errors";
+import { AccountModel } from "@/domain/models";
+import { Router } from "react-router-dom";
 
 type SutTypes = {
   loadSurveyResultSpy: LoadSurveyResultSpy;
+  history: MemoryHistory;
+  setCurrentAccountMock: (account: AccountModel) => void;
 };
 
 const makeSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutTypes => {
+  const history = createMemoryHistory({ initialEntries: ["/"] });
+  const setCurrentAccountMock = jest.fn();
   render(
-    <ApiContext.Provider value={{ setCurrentAccount: jest.fn(), getCurrentAccount: () => mockAccount() }}>
-      <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
+    <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock, getCurrentAccount: () => mockAccount() }}>
+      <Router history={history}>
+        <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
+      </Router>
     </ApiContext.Provider>
   );
 
   return {
     loadSurveyResultSpy,
+    history,
+    setCurrentAccountMock,
   };
 };
 
@@ -74,10 +85,21 @@ describe('SurveyResult Component', () => {
     jest.spyOn(loadSurveyResultSpy, "load").mockRejectedValueOnce(error);
     makeSut(loadSurveyResultSpy);
     await waitFor(() => {
-      expect(screen.queryByTestId("survey-list")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("question")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("survey-list"));
       expect(screen.getByTestId("error")).toHaveTextContent(error.message);
-      expect(screen.queryByTestId("loading")).not.toBeInTheDocument();
     });
+    expect(screen.queryByTestId("question")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("loading")).not.toBeInTheDocument();
+  });
+
+  test('Should logout on AccessDeniedError', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    jest.spyOn(loadSurveyResultSpy, "load").mockRejectedValueOnce(new AccessDeniedError());
+    const { setCurrentAccountMock, history } = makeSut(loadSurveyResultSpy);
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-list"));
+    });
+    expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
+    expect(history.location.pathname).toBe("/login");
   });
 });
