@@ -6,7 +6,7 @@ import styles from "./styles.scss"
 
 const Loading: React.FC = () => {
   return (
-    <div className={styles.loadingWrap}>
+    <div data-testid="loading" className={styles.loadingWrap}>
       <div className={styles.loading}>
         <span>Carregando...</span>
         <Spinner isNegative />
