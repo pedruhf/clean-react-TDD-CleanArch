@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { createMemoryHistory, MemoryHistory } from "history";
 
 import { SurveyResult } from "@/presentation/pages";
@@ -85,7 +85,7 @@ describe('SurveyResult Component', () => {
     jest.spyOn(loadSurveyResultSpy, "load").mockRejectedValueOnce(error);
     makeSut(loadSurveyResultSpy);
     await waitFor(() => {
-      expect(screen.queryByTestId("survey-list"));
+      expect(screen.queryByTestId("survey-result"));
       expect(screen.getByTestId("error")).toHaveTextContent(error.message);
     });
     expect(screen.queryByTestId("question")).not.toBeInTheDocument();
@@ -97,9 +97,23 @@ describe('SurveyResult Component', () => {
     jest.spyOn(loadSurveyResultSpy, "load").mockRejectedValueOnce(new AccessDeniedError());
     const { setCurrentAccountMock, history } = makeSut(loadSurveyResultSpy);
     await waitFor(() => {
-      expect(screen.queryByTestId("survey-list"));
+      expect(screen.queryByTestId("survey-result"));
     });
     expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
     expect(history.location.pathname).toBe("/login");
+  });
+
+  test('Should call LoadSurveyResult on click in reload button', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    jest.spyOn(loadSurveyResultSpy, "load").mockRejectedValueOnce(new UnexpectedError());
+    makeSut(loadSurveyResultSpy);
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-result"));
+      fireEvent.click(screen.getByTestId("reload-button"));
+    });
+    expect(loadSurveyResultSpy.callsCount).toBe(1);
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-result"));
+    });
   });
 });
