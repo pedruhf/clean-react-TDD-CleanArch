@@ -48,13 +48,18 @@
 
   footer {
     background-color: $primary;
-    color: $white;
-    line-height: 3rem;
-    text-transform: lowercase;
-    text-align: center;
     cursor: pointer;
     transition: background-color 0.2s;
     border-radius: 0 0 0.4rem 0.4rem;
+
+    a {
+      display: block;
+      color: $white;
+      line-height: 3rem;
+      text-transform: lowercase;
+      text-align: center;
+      text-decoration: none;
+    }
 
     &:hover {
       background-color: $primaryDark;
