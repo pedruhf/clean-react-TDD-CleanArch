@@ -1,27 +1,28 @@
 import { faker } from "@faker-js/faker";
 
-import { HttpGetClient, HttpGetParams, httpPostParams, HttpResponse, HttpStatusCode } from "@/data/protocols/http";
+import { HttpClient, HttpRequest, HttpResponse, HttpStatusCode } from "@/data/protocols/http";
 
-export class HttpGetClientSpy<R = any> implements HttpGetClient<R> {
-  url: string;
+export class HttpClientSpy<R = any> implements HttpClient<R> {
+  url?: string;
+  method?: string;
+  body?: any;
   headers?: any;
   response: HttpResponse<R> = {
     statusCode: HttpStatusCode.ok,
   };
 
-  async get (params: HttpGetParams): Promise<HttpResponse<R>> {
-    this.url = params.url;
-    this.headers = params.headers;
+  async request (data: HttpRequest): Promise<HttpResponse<R>> {
+    this.url = data.url;
+    this.method = data.method;
+    this.body = data.body;
+    this.headers = data.headers;
     return this.response;
   }
 }
 
-export const mockGetRequest = (): HttpGetParams => ({
+export const mockHttpRequest = (): HttpRequest => ({
   url: faker.internet.url(),
-  headers: JSON.parse(faker.datatype.json()),
-});
-
-export const mockPostRequest = (): httpPostParams => ({
-  url: faker.internet.url(),
+  method: faker.helpers.arrayElement(["get", "post", "put", "delete"]),
   body: JSON.parse(faker.datatype.json()),
+  headers: JSON.parse(faker.datatype.json()),
 });
