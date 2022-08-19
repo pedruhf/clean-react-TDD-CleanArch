@@ -35,3 +35,13 @@ export class LoadSurveyResultSpy implements LoadSurveyResult {
     return Promise.resolve(this.surveyResult);
   }
 }
+
+export class SaveSurveyResultSpy implements SaveSurveyResult {
+  params: SaveSurveyResult.Params;
+  surveyResult = mockSurveyResult();
+  
+  async save (params: SaveSurveyResult.Params): Promise<SaveSurveyResult.Model> {
+    this.params = params;
+    return Promise.resolve(this.surveyResult);
+  }
+}
