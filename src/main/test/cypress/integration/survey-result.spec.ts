@@ -4,7 +4,7 @@ import * as MockHttpHelper from "../utils/http-mocks";
 const path = /surveys/;
 
 const mockLoadSuccess = (): void => {
-  MockHttpHelper.mockOk(path, "GET", "fx:survey-result");
+  MockHttpHelper.mockOk(path, "GET", "fx:load-survey-result");
 };
 
 describe("SurveyResult", () => {
@@ -81,6 +81,10 @@ describe("SurveyResult", () => {
       MockHttpHelper.mockForbiddenError(path, "PUT");
     };
 
+    const mockSaveSuccess = (): void => {
+      MockHttpHelper.mockOk(path, "PUT", "fx:save-survey-result");
+    };
+
     beforeEach(() => {
       cy.fixture("account").then(account => {
         MockHelper.setLocalStorageItem("account", account);
@@ -100,6 +104,25 @@ describe("SurveyResult", () => {
       mockAccessDeniedError();
       cy.get("li:nth-child(2)").click();
       MockHelper.testUrl("/login");
+    });
+
+    it("Should present a new result on answer click", () => {
+      mockSaveSuccess();
+      cy.get("li:nth-child(2)").click();
+      cy.getByTestId("question").should("have.text", "Other Question");
+      cy.getByTestId("day").should("have.text", "19");
+      cy.getByTestId("month").should("have.text", "ago");
+      cy.getByTestId("year").should("have.text", "2022");
+      cy.get("li:nth-child(1)").then(li => {
+        assert.equal(li.find("[data-testid='answer']").text(), "other_answer");
+        assert.equal(li.find("[data-testid='image']").attr("src"), "other_image");
+        assert.equal(li.find("[data-testid='percent']").text(), "100%");
+      });
+      cy.get("li:nth-child(2)").then(li => {
+        assert.equal(li.find("[data-testid='answer']").text(), "other_answer_2");
+        assert.notExists(li.find("[data-testid='image']"));
+        assert.equal(li.find("[data-testid='percent']").text(), "50%");
+      });
     });
   });
 });
