@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import { LoadSurveyResult } from "@/domain/usecases";
+import { LoadSurveyResult, SaveSurveyResult } from "@/domain/usecases";
 import {  Error, Footer, Header, Loading } from "@/presentation/components";
 import { useErrorHandler } from "@/presentation/hooks";
-import { SurveyResultData } from "@/presentation/pages/survey-result/components";
+import { SurveyResultContext, SurveyResultData } from "@/presentation/pages/survey-result/components";
 
 import styles from "./styles.scss";
 
 type SurveyResultProps = {
   loadSurveyResult: LoadSurveyResult;
+  saveSurveyResult: SaveSurveyResult;
 };
 
-const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult }: SurveyResultProps) => {
+const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult, saveSurveyResult }: SurveyResultProps) => {
   const handleError = useErrorHandler((error: Error) => setState(prevState => ({ ...prevState, surveyResult: null, error: error.message })));
   const [state, setState] = useState({
     isLoading: false,
@@ -29,7 +30,12 @@ const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult }: SurveyR
     }));
   };
 
-  
+  const onAnswer = (answer: string): void => {
+    setState(prevState => ({ ...prevState, isLoading: true }));
+    saveSurveyResult.save({ answer })
+      .then()
+      .catch();
+  }
   
   useEffect(() => {
     loadSurveyResult.load()
@@ -40,12 +46,13 @@ const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult }: SurveyR
   return (
     <div className={styles.surveyResultWrap}>
       <Header />
-
-      <div data-testid="survey-result" className={styles.contentWrap}>
-        { state.surveyResult && <SurveyResultData surveyResult={state.surveyResult} /> }
-        { state.isLoading && <Loading /> }
-        { state.error && <Error error={state.error} reload={reload} /> }
-      </div>
+      <SurveyResultContext.Provider value={{ onAnswer }}>
+        <div data-testid="survey-result" className={styles.contentWrap}>
+          { state.surveyResult && <SurveyResultData surveyResult={state.surveyResult} /> }
+          { state.isLoading && <Loading /> }
+          { state.error && <Error error={state.error} reload={reload} /> }
+        </div>
+      </SurveyResultContext.Provider>
       
       <Footer />
     </div>
