@@ -13,7 +13,12 @@ type SurveyResultProps = {
 };
 
 const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult, saveSurveyResult }: SurveyResultProps) => {
-  const handleError = useErrorHandler((error: Error) => setState(prevState => ({ ...prevState, surveyResult: null, error: error.message })));
+  const handleError = useErrorHandler((error: Error) => setState(prevState => ({
+    ...prevState,
+    surveyResult: null,
+    isLoading: false,
+    error: error.message,
+  })));
   const [state, setState] = useState({
     isLoading: false,
     error: "",
@@ -34,7 +39,7 @@ const SurveyResult: React.FC<SurveyResultProps> = ({ loadSurveyResult, saveSurve
     setState(prevState => ({ ...prevState, isLoading: true }));
     saveSurveyResult.save({ answer })
       .then()
-      .catch();
+      .catch(handleError);
   }
   
   useEffect(() => {
