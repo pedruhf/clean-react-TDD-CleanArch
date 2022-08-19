@@ -125,4 +125,13 @@ describe('SurveyResult Component', () => {
     });
     expect(history.location.pathname).toBe("/");
   });
+
+  test('Should not present loading on active answer click', async () => {
+    await waitFor(() => {
+      expect(screen.getByTestId("survey-result"));
+      const answersWrap = screen.queryAllByTestId("answer-wrap");
+      fireEvent.click(answersWrap[0]);
+    });
+    expect(screen.queryByTestId("loading")).not.toBeInTheDocument();
+  });
 });
