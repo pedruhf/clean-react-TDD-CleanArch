@@ -4,7 +4,7 @@ import { RemoteSaveSurveyResult } from "@/data/usecases";
 import { HttpClientSpy, mockRemoveSurveyResult } from "@/data/test";
 import { HttpStatusCode } from "@/data/protocols/http";
 import { mockSaveSurveyResultParams } from "@/domain/test";
-import { AccessDeniedError } from "@/domain/errors";
+import { AccessDeniedError, UnexpectedError } from "@/domain/errors";
 
 type SutTypes = {
   sut: RemoteSaveSurveyResult;
@@ -43,5 +43,14 @@ describe('RemoteSaveSurveyResult Usecase', () => {
     };
     const loadPromise = sut.save(mockSaveSurveyResultParams());
     await expect(loadPromise).rejects.toThrow(new AccessDeniedError());
+  });
+
+  test('Should throws UnexpectedError if HttpClient returns 404', async () => {
+    const { sut, httpClientSpy } = makeSut();
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.notFound,
+    };
+    const loadPromise = sut.save(mockSaveSurveyResultParams());
+    await expect(loadPromise).rejects.toThrow(new UnexpectedError());
   });
 });
