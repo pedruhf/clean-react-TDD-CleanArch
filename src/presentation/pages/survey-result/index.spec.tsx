@@ -163,4 +163,22 @@ describe('SurveyResult Component', () => {
       expect(screen.getByTestId("survey-result"));
     });
   });
+
+  test('Should presents error on UnexpectedError', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+    const error = new UnexpectedError();
+    jest.spyOn(saveSurveyResultSpy, "save").mockRejectedValueOnce(error);
+    makeSut({ saveSurveyResultSpy });
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-result"));
+      const answersWrap = screen.queryAllByTestId("answer-wrap");
+      fireEvent.click(answersWrap[1]);
+    });
+    await waitFor(() => {
+      expect(screen.queryByTestId("survey-result"));
+      expect(screen.queryByTestId("question")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("loading")).not.toBeInTheDocument();
+      expect(screen.getByTestId("error")).toHaveTextContent(error.message);
+    });
+  });
 });
