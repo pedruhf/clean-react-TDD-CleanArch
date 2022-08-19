@@ -1,6 +1,5 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import FlipMove from "react-flip-move";
 
 import { Calendar } from "@/presentation/components";
 import { LoadSurveyResult } from "@/domain/usecases";
