@@ -62,4 +62,19 @@ describe('RemoteSaveSurveyResult Usecase', () => {
     const loadPromise = sut.save(mockSaveSurveyResultParams());
     await expect(loadPromise).rejects.toThrow(new UnexpectedError());
   });
+
+  test('Should return a SurveyResult on 200', async () => {
+    const { sut, httpClientSpy } = makeSut();
+    const httpResult = mockRemoveSurveyResult();
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResult,
+    }
+    const httpResponse = await sut.save(mockSaveSurveyResultParams());
+    expect(httpResponse).toEqual({
+      question: httpResult.question,
+      date: new Date(httpResult.date),
+      answers: httpResult.answers,
+    })
+  });
 });
